@@ -1,16 +1,25 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import { Request, Response } from "express";
 import { AppDataSource } from "./data-source";
 import Control from "./controller";
-import { User } from "./entity/User";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 AppDataSource.initialize()
   .then(async () => {
     const app = express();
     app.use(bodyParser.json());
+    const httpServer = createServer(app);
+    const io = new Server(httpServer, {
+      /* options */
+    });
 
-    app.listen(4000);
+    io.on("connection", (socket) => {
+      // ...
+    });
+
+    httpServer.listen(4000);
+
     app.use(Control);
 
     console.log("Server Running");
