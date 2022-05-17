@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import TestBoard from "./components/etc/testBoard";
 import Main from "./components/main/main";
 import Start from "./components/start";
 
@@ -25,7 +26,8 @@ function App() {
   return (
     <Frame>
       <AppFrame>
-        {!isLogin ? <Start f={isloginf}></Start> : <Main></Main>}
+        {/* {!isLogin ? <Start f={isloginf}></Start> : <Main></Main>} */}
+        <TestBoard></TestBoard>
       </AppFrame>
     </Frame>
   );
