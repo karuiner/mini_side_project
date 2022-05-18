@@ -4,33 +4,17 @@ import { User } from "../../entity/User";
 const user = AppDataSource.getRepository(User);
 const router = express.Router();
 
-router.get("/:id", (req, res) => {
-  res.send("get user data");
-});
-
 router.get("/", (req, res) => {
-  res.send("get users data");
-});
-
-router.post("/signin", (req, res) => {
-  res.send("user signin");
-});
-
-router.post("/signout", (req, res) => {
-  res.send("user signout");
+  res.send("멤버 정보");
 });
 
 router.post("/", (req, res) => {
   // user resister
-  res.send("user resister");
-});
-
-router.patch("/", (req, res) => {
-  res.send("user update");
+  res.send("멤버 추가");
 });
 
 router.delete("/", (req, res) => {
-  res.send("user remove");
+  res.send("멤버 제거");
 });
 
 export default router;

@@ -2,13 +2,11 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany,
   CreateDateColumn,
-  UpdateDateColumn,
+  ManyToOne,
 } from "typeorm";
-// import { Record } from "./Record";
-// import { Save } from "./Save";
-// import { Mapdata } from "./Map";
+import { Room } from "./Room";
+import { User } from "./User";
 
 @Entity()
 export class Message {
@@ -21,11 +19,13 @@ export class Message {
   @CreateDateColumn()
   createdAt: Date;
 
-  //   @OneToMany((type) => Record, (record) => record.user, { cascade: ["remove"] })
-  //   record: Record[];
+  @ManyToOne(() => User, (user) => user.member, {
+    onDelete: "CASCADE",
+  })
+  user: User;
 
-  //   @OneToMany((type) => Mapdata, (mapdata) => mapdata.user, {
-  //     cascade: ["remove"],
-  //   })
-  //   mapdata: Mapdata[];
+  @ManyToOne(() => Room, (room) => room.member, {
+    onDelete: "CASCADE",
+  })
+  room: Room;
 }

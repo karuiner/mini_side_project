@@ -1,23 +1,13 @@
 import * as express from "express";
 import { AppDataSource } from "../../data-source";
+import { Friend } from "../../entity/Friend";
 import { User } from "../../entity/User";
 const user = AppDataSource.getRepository(User);
+const friend = AppDataSource.getRepository(Friend);
 const router = express.Router();
 
 router.get("/:id", (req, res) => {
-  res.send("get user data");
-});
-
-router.get("/", (req, res) => {
-  res.send("get users data");
-});
-
-router.post("/signin", (req, res) => {
-  res.send("user signin");
-});
-
-router.post("/signout", (req, res) => {
-  res.send("user signout");
+  let id = Number(req.params.id);
 });
 
 router.post("/", (req, res) => {

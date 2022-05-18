@@ -6,7 +6,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 
 AppDataSource.initialize()
-  .then(async () => {
+  .then(() => {
     const app = express();
     app.use(bodyParser.json());
     const httpServer = createServer(app);
