@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node src/index.ts",
+    "testdb": "ts-node src/testdb.ts",
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "author": "intaek-Gong",
