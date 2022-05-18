@@ -44,6 +44,20 @@ TestDataSource.initialize()
         await friend.insert({ user: user1, puser: target });
       }
     }
+    await member
+      .find({ relations: { room: true }, where: { user: { id: 2 } } })
+      .then((x) => {
+        let rooms = [];
+        x.forEach((x) => {
+          rooms.push(x.room);
+        });
+        return rooms;
+      })
+      .then((x) => {
+        console.log(x);
+      })
+      .catch();
+
     // await user
     //   .findOne({
     //     relations: {
