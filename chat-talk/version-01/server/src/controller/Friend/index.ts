@@ -8,19 +8,47 @@ const router = express.Router();
 
 router.get("/:id", (req, res) => {
   let id = Number(req.params.id);
+  friend
+    .find({
+      select: { puser: { id: true, userName: true } },
+      relations: { puser: true },
+      where: { user: { id: id } },
+    })
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch(() => {
+      res.status(400).send("fail");
+    });
 });
 
 router.post("/", (req, res) => {
-  // user resister
-  res.send("user resister");
+  let [hid, fid] = [req.body.hostId, req.body.friendId];
+  user
+    .findOne({ where: { id: hid } })
+    .then((h) => {
+      return user.findOne({ where: { id: fid } }).then((f) => {
+        return friend.insert({ user: h, puser: f });
+      });
+    })
+    .then((data) => {
+      res.status(200).send("success");
+    })
+    .catch(() => {
+      res.status(400).send("fail");
+    });
 });
 
-router.patch("/", (req, res) => {
-  res.send("user update");
-});
-
-router.delete("/", (req, res) => {
-  res.send("user remove");
+router.delete("/:id", (req, res) => {
+  let id = Number(req.params.id);
+  friend
+    .delete(id)
+    .then((data) => {
+      res.status(200).send("success");
+    })
+    .catch(() => {
+      res.status(400).send("fail");
+    });
 });
 
 export default router;

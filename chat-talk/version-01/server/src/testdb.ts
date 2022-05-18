@@ -44,25 +44,25 @@ TestDataSource.initialize()
         await friend.insert({ user: user1, puser: target });
       }
     }
-    await user
-      .findOne({
-        relations: {
-          host: true,
-          friend: { puser: true },
-          member: true,
-          message: true,
-        },
-        where: { id: 1 },
-      })
-      .then((rst) => {
-        rst.friend.forEach((x) => {
-          console.log(x);
-        });
-      });
+    // await user
+    //   .findOne({
+    //     relations: {
+    //       friend: { puser: true },
+    //     },
+    //     select: { friend: true },
+    //     where: { id: 1 },
+    //   })
+    //   .then((rst) => {
+    //     // rst.friend.forEach((x) => {
+    //     //   console.log(x);
+    //     // });
+    //     console.log(rst);
+    //   });
     await friend
-      .findOne({
-        relations: { user: true, puser: true },
-        where: { id: 1 },
+      .find({
+        select: { puser: { id: true, userName: true } },
+        relations: { puser: true },
+        where: { user: { id: 1 } },
       })
       .then(console.log);
   })
