@@ -8,24 +8,26 @@ const Frame = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
+  background-color: yellow;
   flex-direction: column;
+  border-radius: 20px;
+  border: 2px solid black;
 `;
 const ButtonBox = styled.div`
   display: flex;
   flex: 1 0 0;
-
-  border: 2px solid blue;
 `;
-const Button = styled.button`
+const Button = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom: 2px solid black;
   flex: 1 0 0;
 `;
+
 const ContentBox = styled.div`
   display: flex;
-  flex: 5 0 0;
-  border: 2px solid green;
+  flex: 10 0 0;
 `;
 
 function Main() {
