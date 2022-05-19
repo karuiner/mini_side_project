@@ -12,11 +12,10 @@ AppDataSource.initialize()
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
       /* options */
+      // transports: ['websocket'],
     });
 
-    io.on("connection", (socket) => {
-      // ...
-    });
+    io.on("connection", (socket) => {});
 
     httpServer.listen(4000);
 

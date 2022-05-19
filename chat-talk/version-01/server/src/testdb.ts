@@ -88,6 +88,22 @@ TestDataSource.initialize()
         where: { user: { id: 1 } },
       })
       .then(console.log);
+
+    await room
+      .findOne({ where: { id: 1 } })
+      .then((rdata) => {
+        return message.find({
+          where: { room: rdata },
+          order: {
+            id: "DESC",
+          },
+          take: 10,
+        });
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {});
   })
   .then(async () => {
     await TestDataSource.destroy();
