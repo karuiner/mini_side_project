@@ -32,7 +32,7 @@ const Button = styled.div`
   border: 2px solid black;
 `;
 
-function Login({ f, f2 }: { f: Function; f2: Function }) {
+function Resister({ f, f2 }: { f: Function; f2: Function }) {
   return (
     <Frame>
       <WindowBox>
@@ -43,24 +43,23 @@ function Login({ f, f2 }: { f: Function; f2: Function }) {
           <Labelinput label={"password"} f={() => {}}></Labelinput>
         </ColumnBox>
         <ColumnBox>
+          <Labelinput label={"password check"} f={() => {}}></Labelinput>
+        </ColumnBox>
+        <ColumnBox>
+          <Labelinput label={"email"} f={() => {}}></Labelinput>
+        </ColumnBox>
+        <ColumnBox>
+          <Button>회원 가입</Button>
           <Button
             onClick={() => {
-              f2(false);
+              f2(true);
             }}
           >
-            회원 가입
-          </Button>
-          <Button
-            onClick={() => {
-              f(true);
-            }}
-          >
-            로그인
+            돌아가기
           </Button>
         </ColumnBox>
-        <ColumnBox></ColumnBox>
       </WindowBox>
     </Frame>
   );
 }
-export default Login;
+export default Resister;

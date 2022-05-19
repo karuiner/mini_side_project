@@ -5,7 +5,7 @@ const Frame = styled.div`
   width: 100%;
   display: flex;
   box-sizing: border-box;
-  padding: 5%;
+  padding: 2%;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -13,22 +13,43 @@ const Frame = styled.div`
 
 const LabelBox = styled.div`
   display: flex;
-  width: 100%;
+  width: 80%;
   flex: 1 0 0;
-  border: 2px solid green;
+  justify-content: center;
+  font-size: 150%;
+  align-items: center;
 `;
-const InputBox = styled.input`
+const InputBox = styled.div`
   display: flex;
-  width: 100%;
+  width: 80%;
   flex: 1 0 0;
-  border: 2px solid green;
+  justify-content: center;
+  align-items: center;
+`;
+const TextBox = styled.span`
+  display: flex;
+`;
+const Input = styled.input`
+  display: flex;
+  height: 80%;
+  width: 80%;
+  text-align: right;
+  border-radius: 5px;
 `;
 
 function Labelinput({ label, f }: { label: string; f: Function }) {
   return (
     <Frame>
-      <LabelBox>label</LabelBox>
-      <InputBox></InputBox>
+      <LabelBox>
+        <TextBox>{label}</TextBox>
+      </LabelBox>
+      <InputBox>
+        <Input
+          onChange={(e) => {
+            f(e.target.value);
+          }}
+        ></Input>
+      </InputBox>
     </Frame>
   );
 }
