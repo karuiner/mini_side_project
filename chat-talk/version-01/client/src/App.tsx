@@ -10,14 +10,12 @@ const Frame = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px solid red;
 `;
 
 const AppFrame = styled.div`
   height: 80%;
   width: 500px;
   display: flex;
-  border: 2px solid blue;
 `;
 function App() {
   console.log(window.innerHeight, window.innerWidth);
