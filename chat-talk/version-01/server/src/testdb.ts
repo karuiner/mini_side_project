@@ -44,20 +44,29 @@ TestDataSource.initialize()
         await friend.insert({ user: user1, puser: target });
       }
     }
-    await member
-      .find({ relations: { room: true }, where: { user: { id: 2 } } })
-      .then((x) => {
-        let rooms = [];
-        x.forEach((x) => {
-          rooms.push(x.room);
-        });
-        return rooms;
+    // await member
+    //   .find({ relations: { room: true }, where: { user: { id: 2 } } })
+    //   .then((x) => {
+    //     let rooms = [];
+    //     x.forEach((x) => {
+    //       rooms.push(x.room);
+    //     });
+    //     return rooms;
+    //   })
+    //   .then((x) => {
+    //     console.log(x);
+    //   })
+    //   .catch();
+    await room
+      .findOne({
+        select: { member: { id: true, user: { id: true, userName: true } } },
+        relations: { member: { user: true } },
+        where: { id: 1 },
       })
       .then((x) => {
-        console.log(x);
+        console.log(x.member);
       })
-      .catch();
-
+      .catch((err) => {});
     // await user
     //   .findOne({
     //     relations: {
