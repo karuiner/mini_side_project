@@ -6,9 +6,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
-// import { Record } from "./Record";
-// import { Save } from "./Save";
-// import { Mapdata } from "./Map";
+import { Friend } from "./Friend";
+import { Member } from "./Member";
+import { Message } from "./Message";
 
 @Entity()
 export class User {
@@ -30,11 +30,19 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  //   @OneToMany((type) => Record, (record) => record.user, { cascade: ["remove"] })
-  //   record: Record[];
+  @OneToMany((type) => Member, (member) => member.user, { cascade: ["remove"] })
+  member: Member[];
 
-  //   @OneToMany((type) => Mapdata, (mapdata) => mapdata.user, {
-  //     cascade: ["remove"],
-  //   })
-  //   mapdata: Mapdata[];
+  @OneToMany((type) => Message, (message) => message.user, {
+    cascade: ["remove"],
+  })
+  message: Message[];
+
+  @OneToMany((type) => Friend, (host) => host.puser, { cascade: ["remove"] })
+  host: Friend[];
+
+  @OneToMany((type) => Friend, (friend) => friend.user, {
+    cascade: ["remove"],
+  })
+  friend: Friend[];
 }

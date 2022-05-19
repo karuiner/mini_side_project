@@ -1,17 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from "typeorm";
-// import { Record } from "./Record";
-// import { Save } from "./Save";
-// import { Mapdata } from "./Map";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Member } from "./Member";
+import { Message } from "./Message";
 
 @Entity()
-export class Friend {
+export class Room {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,11 +13,11 @@ export class Friend {
   @Column()
   lastMessage: string;
 
-  //   @OneToMany((type) => Record, (record) => record.user, { cascade: ["remove"] })
-  //   record: Record[];
+  @OneToMany((type) => Member, (member) => member.room, { cascade: ["remove"] })
+  member: Member[];
 
-  //   @OneToMany((type) => Mapdata, (mapdata) => mapdata.user, {
-  //     cascade: ["remove"],
-  //   })
-  //   mapdata: Mapdata[];
+  @OneToMany((type) => Message, (message) => message.room, {
+    cascade: ["remove"],
+  })
+  message: Message[];
 }

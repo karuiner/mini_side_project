@@ -1,25 +1,18 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from "typeorm";
-// import { Record } from "./Record";
-// import { Save } from "./Save";
-// import { Mapdata } from "./Map";
+import { Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { User } from "./User";
 
 @Entity()
-export class User {
+export class Friend {
   @PrimaryGeneratedColumn()
   id: number;
 
-  //   @OneToMany((type) => Record, (record) => record.user, { cascade: ["remove"] })
-  //   record: Record[];
+  @ManyToOne(() => User, (user) => user.friend, {
+    onDelete: "CASCADE",
+  })
+  user: User;
 
-  //   @OneToMany((type) => Mapdata, (mapdata) => mapdata.user, {
-  //     cascade: ["remove"],
-  //   })
-  //   mapdata: Mapdata[];
+  @ManyToOne(() => User, (puser) => puser.host, {
+    onDelete: "CASCADE",
+  })
+  puser: User;
 }

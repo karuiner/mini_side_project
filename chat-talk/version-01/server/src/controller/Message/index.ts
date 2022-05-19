@@ -1,36 +1,42 @@
 import * as express from "express";
 import { AppDataSource } from "../../data-source";
-import { User } from "../../entity/User";
-const user = AppDataSource.getRepository(User);
+import { Message } from "../../entity/Message";
+import { Room } from "../../entity/Room";
+const room = AppDataSource.getRepository(Room);
+const message = AppDataSource.getRepository(Message);
 const router = express.Router();
 
 router.get("/:id", (req, res) => {
-  res.send("get user data");
+  let id = Number(req.params.id);
+  room
+    .findOne({ where: { id: id } })
+    .then((rdata) => {
+      return message.find({
+        where: { room: rdata },
+        order: {
+          id: "DESC",
+        },
+        take: 10,
+      });
+    })
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((err) => {
+      res.status(400).send("메세지 정보 요청 실패");
+    });
 });
 
-router.get("/", (req, res) => {
-  res.send("get users data");
-});
-
-router.post("/signin", (req, res) => {
-  res.send("user signin");
-});
-
-router.post("/signout", (req, res) => {
-  res.send("user signout");
-});
-
-router.post("/", (req, res) => {
-  // user resister
-  res.send("user resister");
-});
-
-router.patch("/", (req, res) => {
-  res.send("user update");
-});
-
-router.delete("/", (req, res) => {
-  res.send("user remove");
+router.delete("/:id", (req, res) => {
+  let id = Number(req.params.id);
+  message
+    .delete(id)
+    .then((data) => {
+      res.status(200).send("메세지 삭제");
+    })
+    .catch((err) => {
+      res.status(400).send("메세지 삭제 실패");
+    });
 });
 
 export default router;

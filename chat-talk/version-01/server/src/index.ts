@@ -6,17 +6,16 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 
 AppDataSource.initialize()
-  .then(async () => {
+  .then(() => {
     const app = express();
     app.use(bodyParser.json());
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
       /* options */
+      // transports: ['websocket'],
     });
 
-    io.on("connection", (socket) => {
-      // ...
-    });
+    io.on("connection", (socket) => {});
 
     httpServer.listen(4000);
 
