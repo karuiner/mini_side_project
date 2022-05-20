@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import Data from "../etc/datainterface";
 import Login from "./login";
 import Resister from "./resister";
 
@@ -24,7 +25,7 @@ const WindowBox = styled.div`
   flex: 4 0 0;
 `;
 
-function Start({ f }: { f: Function }) {
+function Start({ data, dataf }: { data: Data; dataf: Function }) {
   let [wn, wnf] = useState(true);
   return (
     <Frame>
@@ -32,10 +33,10 @@ function Start({ f }: { f: Function }) {
         <h1>Chat Talk</h1>
       </TitleBox>
       <WindowBox>
-        {wn ? (
-          <Login f={f} f2={wnf}></Login>
+        {!data.isResister ? (
+          <Login dataf={dataf}></Login>
         ) : (
-          <Resister f={f} f2={wnf}></Resister>
+          <Resister dataf={dataf}></Resister>
         )}
       </WindowBox>
     </Frame>

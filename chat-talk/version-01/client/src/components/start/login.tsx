@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Data from "../etc/datainterface";
 import Labelinput from "../etc/labelInput";
 
 const Frame = styled.div`
@@ -32,7 +33,7 @@ const Button = styled.div`
   border: 2px solid black;
 `;
 
-function Login({ f, f2 }: { f: Function; f2: Function }) {
+function Login({ dataf }: { dataf: Function }) {
   return (
     <Frame>
       <WindowBox>
@@ -45,14 +46,14 @@ function Login({ f, f2 }: { f: Function; f2: Function }) {
         <ColumnBox>
           <Button
             onClick={() => {
-              f2(false);
+              dataf({ isResister: true });
             }}
           >
             회원 가입
           </Button>
           <Button
             onClick={() => {
-              f(true);
+              dataf({ isLogin: true });
             }}
           >
             로그인
