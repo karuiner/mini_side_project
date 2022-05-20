@@ -23,6 +23,7 @@ interface Data {
   isLogin: Boolean;
   isResister: boolean;
   isChatting: boolean;
+  boxOn: boolean;
   content: string;
   userInfo: userInfo;
   friends: friend[];

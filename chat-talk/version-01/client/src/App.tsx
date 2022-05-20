@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import Addbox from "./components/etc/addbox";
 import Data from "./components/etc/datainterface";
 import Main from "./components/main/main";
 import Start from "./components/start";
@@ -17,6 +18,18 @@ const AppFrame = styled.div`
   height: 80vh;
   width: 500px;
   display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Box = styled.div`
+  height: 150px;
+  width: 300px;
+  z-index: 3;
+  position: absolute;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
 `;
 
 function App() {
@@ -26,6 +39,7 @@ function App() {
     isLogin: false,
     isResister: false,
     isChatting: false,
+    boxOn: false,
     content: "friend",
     userInfo: {},
     friends: [],
@@ -43,6 +57,11 @@ function App() {
         ) : (
           <Main data={data} dataf={IDF}></Main>
         )}
+        {data.boxOn ? (
+          <Box>
+            <Addbox data={data} dataf={IDF}></Addbox>
+          </Box>
+        ) : null}
       </AppFrame>
     </Frame>
   );

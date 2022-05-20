@@ -2,15 +2,20 @@ import { useState } from "react";
 import styled from "styled-components";
 
 const Frame = styled.div`
-  height: 100%;
   width: 100%;
   display: flex;
+  flex: 1 0 0;
 `;
 
 const ImageBox = styled.div`
   display: flex;
   flex: 1 0 0;
   height: 100%;
+  justify-content: center;
+  align-items: center;
+`;
+const Tbox = styled.div`
+  display: flex;
 `;
 
 const TextBox = styled.div`
@@ -28,15 +33,38 @@ const TextLine = styled.div`
   display: 1 0 0;
   flex: 1 0 0;
 `;
+const Tail = styled.div`
+  width: 20px;
+  display: flex;
+`;
+const Remove = styled.button`
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+`;
 
-function Fcard() {
+function Fcard({ f }: { f: Function }) {
   return (
     <Frame>
-      <ImageBox>{"image"}</ImageBox>
+      <ImageBox>
+        <Tbox>{"image"}</Tbox>
+      </ImageBox>
       <TextBox>
-        <NameLine>{"name"}</NameLine>
-        <TextLine>{"text"}</TextLine>
+        <NameLine>
+          <Tbox>{"name"}</Tbox>
+        </NameLine>
+        <TextLine>
+          <Tbox>{"text"}</Tbox>
+        </TextLine>
       </TextBox>
+      <Tail>
+        <Remove
+          onClick={() => {
+            f();
+          }}
+        ></Remove>
+      </Tail>
     </Frame>
   );
 }

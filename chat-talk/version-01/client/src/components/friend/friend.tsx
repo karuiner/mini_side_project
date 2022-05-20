@@ -14,11 +14,25 @@ const Frame = styled.div`
   flex-direction: column;
 `;
 const Line = styled.div`
-  height: 10px;
+  display: flex;
+  height: 30px;
   margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  justify-content: space-between;
   align-items: center;
+  flex-direction: row;
+  padding-right: 10px;
 `;
+const Count = styled.div`
+  display: flex;
+`;
+
+const Button = styled.button`
+  display: flex;
+  border-radius: 5px;
+  border: 1px solid black;
+`;
+
 const Content = styled.div`
   display: flex;
   height: 100%;
@@ -27,7 +41,7 @@ const Content = styled.div`
 `;
 const ContentInner = styled.div`
   display: flex;
-  height: 65vh;
+  max-height: 60vh;
   width: 100%;
   align-items: center;
   flex-direction: column;
@@ -37,10 +51,12 @@ const ContentInner = styled.div`
 `;
 
 const CardBox = styled.div`
-  min-height: 80px;
+  display: flex;
   height: 15%;
+  min-height: 80px;
   width: 100%;
   margin: 5px;
+  border-radius: 10px;
   border: 1px solid black;
 `;
 
@@ -53,13 +69,32 @@ function Friend({ data, dataf }: { data: Data; dataf: Function }) {
 
   return (
     <Frame>
-      <Line>{`친구 ${data.friends.length}명`}</Line>
+      <Line>
+        <Count>{`친구 ${data.friends.length}명`}</Count>
+        <Button
+          onClick={() => {
+            // dataf({ friends: [...data.friends, {}] });
+            dataf({ boxOn: true });
+          }}
+        >
+          {"친구 추가"}
+        </Button>
+      </Line>
       <Content>
         <ContentInner>
           {data.friends.map((x, i) => {
             return (
               <CardBox key={i}>
-                <Fcard></Fcard>
+                <Fcard
+                  f={() => {
+                    dataf({
+                      friends: [
+                        ...data.friends.slice(0, i),
+                        ...data.friends.slice(i + 1),
+                      ],
+                    });
+                  }}
+                ></Fcard>
               </CardBox>
             );
           })}
