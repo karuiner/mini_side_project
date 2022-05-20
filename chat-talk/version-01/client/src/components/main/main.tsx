@@ -40,21 +40,21 @@ function Main({ data, dataf }: { data: Data; dataf: Function }) {
           <ButtonBox>
             <Button
               onClick={() => {
-                dataf({ content: "friend" });
+                dataf({ content: "friend", boxOn: false });
               }}
             >
               친구 목록
             </Button>
             <Button
               onClick={() => {
-                dataf({ content: "room" });
+                dataf({ content: "room", boxOn: false });
               }}
             >
               대화방
             </Button>
             <Button
               onClick={() => {
-                dataf({ content: "profile" });
+                dataf({ content: "profile", boxOn: false });
               }}
             >
               프로필
