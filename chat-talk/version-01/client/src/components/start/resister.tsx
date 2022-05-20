@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import Labelinput from "../etc/labelInput";
 
@@ -32,27 +33,64 @@ const Button = styled.div`
   border: 2px solid black;
 `;
 
-function Resister({ f, f2 }: { f: Function; f2: Function }) {
+interface Udata {
+  userName: string;
+  password: string;
+  email: string;
+}
+
+function Resister({ dataf }: { dataf: Function }) {
+  let [udata, udataf] = useState<Udata>({
+    userName: "",
+    password: "",
+    email: "",
+  });
   return (
     <Frame>
       <WindowBox>
         <ColumnBox>
-          <Labelinput label={"username"} f={() => {}}></Labelinput>
+          <Labelinput
+            label={"username"}
+            f={(name: string) => {
+              udataf({ ...udata, userName: name });
+            }}
+          ></Labelinput>
         </ColumnBox>
         <ColumnBox>
-          <Labelinput label={"password"} f={() => {}}></Labelinput>
+          <Labelinput
+            label={"password"}
+            f={(password: string) => {
+              udataf({ ...udata, password: password });
+            }}
+          ></Labelinput>
         </ColumnBox>
         <ColumnBox>
-          <Labelinput label={"password check"} f={() => {}}></Labelinput>
+          <Labelinput
+            label={"password check"}
+            f={(password: string) => {
+              return udata.password === password;
+            }}
+          ></Labelinput>
         </ColumnBox>
         <ColumnBox>
-          <Labelinput label={"email"} f={() => {}}></Labelinput>
+          <Labelinput
+            label={"email"}
+            f={(email: string) => {
+              udataf({ ...udata, email: email });
+            }}
+          ></Labelinput>
         </ColumnBox>
         <ColumnBox>
-          <Button>회원 가입</Button>
           <Button
             onClick={() => {
-              f2(true);
+              dataf({ isLogin: true, isResister: false, userInfo: udata });
+            }}
+          >
+            회원 가입
+          </Button>
+          <Button
+            onClick={() => {
+              dataf({ isResister: false });
             }}
           >
             돌아가기

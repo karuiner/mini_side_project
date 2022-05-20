@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import Data from "./components/etc/datainterface";
 import Main from "./components/main/main";
 import Start from "./components/start";
 
@@ -13,17 +14,35 @@ const Frame = styled.div`
 `;
 
 const AppFrame = styled.div`
-  height: 80%;
+  height: 80vh;
   width: 500px;
   display: flex;
 `;
+
 function App() {
   console.log(window.innerHeight, window.innerWidth);
   let [isLogin, isloginf] = useState(false);
+  let [data, dataf] = useState<Data>({
+    isLogin: false,
+    isResister: false,
+    isChatting: false,
+    content: "friend",
+    userInfo: {},
+    friends: [],
+    room: [],
+  });
+  function IDF(input: {}) {
+    dataf({ ...data, ...input });
+  }
+
   return (
     <Frame>
       <AppFrame>
-        {!isLogin ? <Start f={isloginf}></Start> : <Main></Main>}
+        {!data.isLogin ? (
+          <Start data={data} dataf={IDF}></Start>
+        ) : (
+          <Main data={data} dataf={IDF}></Main>
+        )}
       </AppFrame>
     </Frame>
   );
