@@ -10,14 +10,15 @@ const Frame = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
-  background-color: white;
+
   flex-direction: column;
   border-radius: 20px;
   border: 2px solid black;
+  background-color: yellow;
 `;
 const ButtonBox = styled.div`
+  height: 8vh;
   display: flex;
-  flex: 1 0 0;
 `;
 const Button = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ const Button = styled.div`
 
 const ContentBox = styled.div`
   display: flex;
-  flex: 10 0 0;
+  height: 72vh;
 `;
 
 function Main({ data, dataf }: { data: Data; dataf: Function }) {
@@ -66,16 +67,20 @@ function Main({ data, dataf }: { data: Data; dataf: Function }) {
             ) : (
               <></>
             )}
-            {data.content === "room" ? <Room data={data}></Room> : <></>}
+            {data.content === "room" ? (
+              <Room data={data} dataf={dataf}></Room>
+            ) : (
+              <></>
+            )}
             {data.content === "Profile" ? (
-              <Profile data={data}></Profile>
+              <Profile data={data} dataf={dataf}></Profile>
             ) : (
               <></>
             )}
           </ContentBox>
         </>
       ) : (
-        <Chat></Chat>
+        <Chat data={data} dataf={dataf}></Chat>
       )}
     </Frame>
   );

@@ -36,18 +36,22 @@ const Button = styled.button`
 const Content = styled.div`
   display: flex;
   height: 100%;
-  align-items: center;
+
   justify-content: center;
 `;
 const ContentInner = styled.div`
   display: flex;
-  max-height: 60vh;
+  max-height: 62vh;
   width: 100%;
   align-items: center;
   flex-direction: column;
   overflow-y: scroll;
   overflow-x: hidden;
   padding: 5px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border: 1px solid black;
+  background-color: white;
 `;
 
 const CardBox = styled.div`

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import Chat from "./components/chat/chat";
 import Addbox from "./components/etc/addbox";
 import Data from "./components/etc/datainterface";
 import Main from "./components/main/main";
@@ -29,7 +30,6 @@ const Box = styled.div`
   position: absolute;
   background-color: white;
   border: 1px solid black;
-  border-radius: 10px;
 `;
 
 function App() {
@@ -57,6 +57,7 @@ function App() {
         ) : (
           <Main data={data} dataf={IDF}></Main>
         )}
+
         {data.boxOn ? (
           <Box>
             <Addbox data={data} dataf={IDF}></Addbox>
