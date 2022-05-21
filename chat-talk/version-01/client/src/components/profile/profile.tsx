@@ -9,7 +9,7 @@ const Frame = styled.div`
   flex-direction: column;
 `;
 
-function Profile({ data }: { data: Data }) {
+function Profile({ data, dataf }: { data: Data; dataf: Function }) {
   return <Frame>profile</Frame>;
 }
 export default Profile;
