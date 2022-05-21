@@ -37,7 +37,15 @@ const Input = styled.input`
   border-radius: 5px;
 `;
 
-function Labelinput({ label, f }: { label: string; f: Function }) {
+function Labelinput({
+  label,
+  type,
+  f,
+}: {
+  label: string;
+  type: string;
+  f: Function;
+}) {
   return (
     <Frame>
       <LabelBox>
@@ -45,6 +53,7 @@ function Labelinput({ label, f }: { label: string; f: Function }) {
       </LabelBox>
       <InputBox>
         <Input
+          type={type}
           onChange={(e) => {
             f(e.target.value);
           }}

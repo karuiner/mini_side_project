@@ -72,7 +72,7 @@ function Main({ data, dataf }: { data: Data; dataf: Function }) {
             ) : (
               <></>
             )}
-            {data.content === "Profile" ? (
+            {data.content === "profile" ? (
               <Profile data={data} dataf={dataf}></Profile>
             ) : (
               <></>
