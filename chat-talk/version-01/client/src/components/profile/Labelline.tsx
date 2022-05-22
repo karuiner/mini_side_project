@@ -20,9 +20,12 @@ const View = styled.div`
   flex: 1 0 0;
 `;
 const Input = styled.input`
+  height: 100%;
+  width: 50%;
+`;
+const InputBox = styled.div`
   display: flex;
   flex: 1 0 0;
-  size: 10;
 `;
 
 function LabelLine({
@@ -44,12 +47,14 @@ function LabelLine({
       {!x ? (
         <View>{data}</View>
       ) : (
-        <Input
-          type={type}
-          onChange={(e) => {
-            udataf({ label: e.target.value });
-          }}
-        ></Input>
+        <InputBox>
+          <Input
+            type={type}
+            onChange={(e) => {
+              udataf({ label: e.target.value });
+            }}
+          ></Input>
+        </InputBox>
       )}
     </Frame>
   );

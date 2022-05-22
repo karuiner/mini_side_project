@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Data from "../etc/datainterface";
 import base from "../../image/default.png";
 import LabelLine from "./Labelline";
+import Passwordinput from "./passwordinput";
 
 const Frame = styled.div`
   height: 100%;
@@ -55,9 +56,9 @@ const InfoBox = styled.div`
   width: 100%;
   flex-direction: column;
 `;
-const ButtonLine = styled.div`
+const PasswordLine = styled.div`
   display: flex;
-  flex: 1 0 0;
+  flex: 2 0 0;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -98,6 +99,7 @@ function Profile({ data, dataf }: { data: Data; dataf: Function }) {
             onClick={() => {
               dataf({
                 userInfo: udata,
+                isModify: false,
               });
             }}
           >
@@ -151,9 +153,9 @@ function Profile({ data, dataf }: { data: Data; dataf: Function }) {
           x={data.isModify}
         ></LabelLine>
 
-        <ButtonLine>
-          {data.isModify ? <button>패스워드 재설정</button> : null}
-        </ButtonLine>
+        <PasswordLine>
+          {data.isModify ? <Passwordinput f={udataf}></Passwordinput> : null}
+        </PasswordLine>
       </InfoBox>
     </Frame>
   );
