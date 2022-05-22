@@ -16,6 +16,7 @@ const Frame = styled.div`
 `;
 
 const AppFrame = styled.div`
+  box-sizing: border-box;
   height: 80vh;
   width: 500px;
   display: flex;

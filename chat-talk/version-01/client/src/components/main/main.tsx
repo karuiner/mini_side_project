@@ -10,7 +10,7 @@ const Frame = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
-
+  box-sizing: border-box;
   flex-direction: column;
   border-radius: 20px;
   border: 2px solid black;
@@ -30,6 +30,8 @@ const Button = styled.div`
 
 const ContentBox = styled.div`
   display: flex;
+  box-sizing: border-box;
+  width: 100%;
   height: 72vh;
 `;
 
