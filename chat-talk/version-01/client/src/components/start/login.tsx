@@ -38,10 +38,18 @@ function Login({ dataf }: { dataf: Function }) {
     <Frame>
       <WindowBox>
         <ColumnBox>
-          <Labelinput label={"username"} f={() => {}}></Labelinput>
+          <Labelinput
+            label={"username"}
+            type={"text"}
+            f={() => {}}
+          ></Labelinput>
         </ColumnBox>
         <ColumnBox>
-          <Labelinput label={"password"} f={() => {}}></Labelinput>
+          <Labelinput
+            label={"password"}
+            type={"password"}
+            f={() => {}}
+          ></Labelinput>
         </ColumnBox>
         <ColumnBox>
           <Button

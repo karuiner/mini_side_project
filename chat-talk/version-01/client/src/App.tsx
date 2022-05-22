@@ -39,6 +39,7 @@ function App() {
     isLogin: false,
     isResister: false,
     isChatting: false,
+    isModify: false,
     boxOn: false,
     content: "friend",
     userInfo: {},

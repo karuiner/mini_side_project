@@ -51,6 +51,7 @@ function Resister({ dataf }: { dataf: Function }) {
         <ColumnBox>
           <Labelinput
             label={"username"}
+            type={"text"}
             f={(name: string) => {
               udataf({ ...udata, userName: name });
             }}
@@ -59,6 +60,7 @@ function Resister({ dataf }: { dataf: Function }) {
         <ColumnBox>
           <Labelinput
             label={"password"}
+            type={"password"}
             f={(password: string) => {
               udataf({ ...udata, password: password });
             }}
@@ -67,6 +69,7 @@ function Resister({ dataf }: { dataf: Function }) {
         <ColumnBox>
           <Labelinput
             label={"password check"}
+            type={"password"}
             f={(password: string) => {
               return udata.password === password;
             }}
@@ -75,6 +78,7 @@ function Resister({ dataf }: { dataf: Function }) {
         <ColumnBox>
           <Labelinput
             label={"email"}
+            type={"email"}
             f={(email: string) => {
               udataf({ ...udata, email: email });
             }}
