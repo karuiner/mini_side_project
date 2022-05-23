@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Data from "../etc/datainterface";
 import Setting from "./chat_setting";
@@ -27,7 +27,7 @@ const Button = styled.div`
   `;
 
 const Content = styled.div`
-  height: 75vh;
+  max-height: 70vh;
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -35,7 +35,7 @@ const Content = styled.div`
   overflow-x: hidden;
   background-color: white;
   box-sizing: border-box;
-  border-radius: 20px;
+  border-top-left-radius: 20px;
 `;
 const CardBox = styled.div`
   display: flex;
@@ -49,6 +49,30 @@ const RoomName = styled.div`
   padding-left: 10px;
 `;
 //멤버 수도 추가해야함.
+const InputBox = styled.div`
+  min-height: 5vh;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: white;
+  display: flex;
+  aling-items: center;
+  flex: 1 0 1;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+`;
+
+const Input = styled.input`
+  flex: 1 0 0;
+  text-align: right;
+  padding-left: 20px;
+  padding-right: 10px;
+  overflow-y: auto;
+  border-bottom-left-radius: 20px;
+`;
+const Ibutton = styled.button`
+  flex: 1 0 1;
+  border-bottom-right-radius: 20px;
+`;
 
 interface Ddata {
   userName: string;
@@ -59,6 +83,7 @@ interface Ddata {
 function Chat({ data, dataf }: { data: Data; dataf: Function }) {
   let [dummy, df] = useState<Ddata[]>([]);
   let [set, setf] = useState(false);
+  let [msg, msgf] = useState("");
   if (dummy.length === 0) {
     let dd: Ddata[] = [];
     for (let i = 0; i < 10; i++) {
@@ -69,6 +94,11 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
       "sadasfhklajhfklajfdlkjsakld jsakljdklsjdklaskdlakldjk lsjdklaskdljklajdklsjak dljakljd k l sajkdljsak ljdskla jdklsjadlj kajdkl sjakdljaklsdjl";
     df(dd);
   }
+  useEffect(() => {
+    let cbox = document.getElementById("testest");
+    cbox?.scrollTo(10000, 10000);
+  });
+
   return (
     <Frame>
       {set ? <Setting f={setf}></Setting> : null}
@@ -89,7 +119,7 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
           설정
         </button>
       </Button>
-      <Content>
+      <Content id="testest">
         {dummy.map((x, i) => (
           <CardBox key={i}>
             {x.userName !== "user1" ? (
@@ -100,6 +130,24 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
           </CardBox>
         ))}
       </Content>
+      <InputBox>
+        <Input
+          value={msg}
+          onChange={(e) => {
+            msgf(e.target.value);
+          }}
+        ></Input>
+        <Ibutton
+          onClick={() => {
+            if (msg.length > 0) {
+              df([...dummy, { userName: "user1", message: msg, time: "time" }]);
+              msgf("");
+            }
+          }}
+        >
+          전송
+        </Ibutton>
+      </InputBox>
     </Frame>
   );
 }
