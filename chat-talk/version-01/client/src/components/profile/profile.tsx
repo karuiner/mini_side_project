@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Data from "../etc/datainterface";
+import { Data } from "../interface/datainterface";
 import base from "../../image/default.png";
 import LabelLine from "./Labelline";
 import Passwordinput from "./passwordinput";

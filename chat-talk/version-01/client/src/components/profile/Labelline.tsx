@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Data from "../etc/datainterface";
+import { Data } from "../interface/datainterface";
 
 const Frame = styled.div`
   width: 100%;

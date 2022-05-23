@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Data from "../etc/datainterface";
+import { Data } from "../interface/datainterface";
 import Labelinput from "../etc/labelInput";
 
 const Frame = styled.div`

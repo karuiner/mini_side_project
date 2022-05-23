@@ -13,10 +13,17 @@ interface member {
   uid: number;
   userName: string;
 }
+interface message {
+  userName: string;
+  message: string;
+  time: string;
+}
+
 interface room {
   id: number;
   name: string;
   members: member[];
+  message: message[];
 }
 
 interface Data {
@@ -31,4 +38,4 @@ interface Data {
   room: room[];
 }
 
-export default Data;
+export type { Data, userInfo, friend, message, room, member };

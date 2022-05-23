@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Chat from "../chat/chat";
-import Data from "../etc/datainterface";
+import { Data } from "../interface/datainterface";
 import Friend from "../friend/friend";
 import Profile from "../profile/profile";
 import Room from "../room/room";
@@ -10,7 +10,7 @@ const Frame = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
-
+  box-sizing: border-box;
   flex-direction: column;
   border-radius: 20px;
   border: 2px solid black;
@@ -30,6 +30,8 @@ const Button = styled.div`
 
 const ContentBox = styled.div`
   display: flex;
+  box-sizing: border-box;
+  width: 100%;
   height: 72vh;
 `;
 

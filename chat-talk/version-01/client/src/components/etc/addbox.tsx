@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Data from "./datainterface";
+import { Data } from "../interface/datainterface";
 
 const Frame = styled.div`
   height: 100%;
