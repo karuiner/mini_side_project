@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import styled from "styled-components";
-import Data from "../etc/datainterface";
+import { Data } from "../interface/datainterface";
 import Fcard from "./fcard";
 
 const Frame = styled.div`

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Chat from "../chat/chat";
-import Data from "../etc/datainterface";
+import { Data } from "../interface/datainterface";
 import Friend from "../friend/friend";
 import Profile from "../profile/profile";
 import Room from "../room/room";

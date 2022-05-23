@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import styled from "styled-components";
-import Data from "../etc/datainterface";
+import { Data } from "../interface/datainterface";
 import RoomCard from "./roomcard";
 
 const Frame = styled.div`
@@ -63,8 +63,8 @@ const CardBox = styled.div`
 
 function Room({ data, dataf }: { data: Data; dataf: Function }) {
   useEffect(() => {
-    if (data.friends.length === 0) {
-      dataf({ friends: Array(20).fill({}) });
+    if (data.room.length === 0) {
+      dataf({ room: Array(20).fill({}) });
     }
   });
 

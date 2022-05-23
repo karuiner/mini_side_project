@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Data from "../etc/datainterface";
+import { Data } from "../interface/datainterface";
 import Setting from "./chat_setting";
 import Message from "./message";
 import Message_Reverse from "./message_r";
 const Frame = styled.div`
-  height: 79.6vh;
-  width: 496px;
+  height: 80vh;
+  width: 500px;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -27,7 +27,8 @@ const Button = styled.div`
   `;
 
 const Content = styled.div`
-  max-height: 70vh;
+  height: 70vh;
+
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -48,7 +49,7 @@ const RoomName = styled.div`
   flex: 1 0 0;
   padding-left: 10px;
 `;
-//멤버 수도 추가해야함.
+
 const InputBox = styled.div`
   min-height: 5vh;
   width: 100%;
@@ -92,6 +93,7 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
     }
     dd[8].message =
       "sadasfhklajhfklajfdlkjsakld jsakljdklsjdklaskdlakldjk lsjdklaskdljklajdklsjak dljakljd k l sajkdljsak ljdskla jdklsjadlj kajdkl sjakdljaklsdjl";
+    // dataf({room})
     df(dd);
   }
   useEffect(() => {

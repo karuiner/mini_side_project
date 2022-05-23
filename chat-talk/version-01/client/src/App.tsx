@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Chat from "./components/chat/chat";
 import Addbox from "./components/etc/addbox";
-import Data from "./components/etc/datainterface";
+import { Data } from "./components/interface/datainterface";
 import Main from "./components/main/main";
 import Start from "./components/start";
 
