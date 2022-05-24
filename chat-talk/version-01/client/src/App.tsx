@@ -33,8 +33,8 @@ const Box = styled.div`
 `;
 let test = process.env;
 function App() {
-  console.log(window.innerHeight, window.innerWidth);
-  console.log(process.env.REACT_APP_SERVER_URL);
+  // console.log(window.innerHeight, window.innerWidth);
+  // console.log(process.env.REACT_APP_SERVER_URL);
   let [isLogin, isloginf] = useState(false);
   let [data, dataf] = useState<Data>({
     isLogin: false,

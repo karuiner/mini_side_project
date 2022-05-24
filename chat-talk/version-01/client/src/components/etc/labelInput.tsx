@@ -14,7 +14,7 @@ const Frame = styled.div`
 const LabelBox = styled.div`
   display: flex;
   width: 80%;
-  flex: 1 0 0;
+  flex: 2 0 0;
   justify-content: center;
   font-size: 150%;
   align-items: center;
@@ -22,7 +22,7 @@ const LabelBox = styled.div`
 const InputBox = styled.div`
   display: flex;
   width: 80%;
-  flex: 1 0 0;
+  flex: 3 0 0;
   justify-content: center;
   align-items: center;
 `;
@@ -33,6 +33,8 @@ const Input = styled.input`
   display: flex;
   height: 80%;
   width: 80%;
+  font-size: 20px;
+  padding-right: 10px;
   text-align: right;
   border-radius: 5px;
 `;

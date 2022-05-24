@@ -2,6 +2,7 @@ interface userInfo {
   id?: number;
   userName?: string;
   email?: string;
+  statusMessage?: string;
 }
 interface friend {
   id: number;

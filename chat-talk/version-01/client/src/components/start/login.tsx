@@ -85,12 +85,9 @@ function Login({ dataf }: { dataf: Function }) {
               axios
                 .post(url + "/user/signin", { ...idata })
                 .then((x) => {
-                  console.log(x, idata);
-                  dataf({ isLogin: true });
+                  dataf({ isLogin: true, userInfo: { ...x.data } });
                 })
-                .catch((err) => {
-                  console.log(err);
-                });
+                .catch((err) => {});
             }}
           >
             로그인

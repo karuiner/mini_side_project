@@ -1,4 +1,5 @@
 import axios from "axios";
+import { checkPrime } from "crypto";
 import { useState } from "react";
 import styled from "styled-components";
 import Labelinput from "../etc/labelInput";
@@ -48,6 +49,22 @@ function Resister({ dataf }: { dataf: Function }) {
     email: "",
   });
 
+  function check() {
+    if (udata.userName.length === 0) {
+      return false;
+    }
+
+    if (udata.password.length === 0) {
+      return false;
+    }
+
+    if (udata.email.length === 0) {
+      return false;
+    }
+
+    return true;
+  }
+
   return (
     <Frame>
       <WindowBox>
@@ -90,14 +107,20 @@ function Resister({ dataf }: { dataf: Function }) {
         <ColumnBox>
           <Button
             onClick={() => {
-              axios
-                .post(url + "/user/", { ...udata })
-                .then((x) => {
-                  dataf({ isLogin: true, isResister: false, userInfo: udata });
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
+              if (check()) {
+                axios
+                  .post(url + "/user/", { ...udata })
+                  .then((x) => {
+                    dataf({
+                      isLogin: true,
+                      isResister: false,
+                      userInfo: udata,
+                    });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
             }}
           >
             회원 가입

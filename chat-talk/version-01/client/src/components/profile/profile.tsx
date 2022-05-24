@@ -69,17 +69,20 @@ interface user {
   userName?: string;
   password?: string;
   email?: string;
-  message?: string;
+  statusMessage?: string;
 }
 
 function Profile({ data, dataf }: { data: Data; dataf: Function }) {
   let [udata, udataf] = useState<user>({});
   useEffect(() => {
     axios
-      .get(process.env.REACT_APP_SERVER_URL + `/user/${1}` || "")
-      .then((x) => {})
+      .get(process.env.REACT_APP_SERVER_URL + `/user/${data.userInfo.id}` || "")
+      .then((x) => {
+        console.log(x.data);
+        dataf({ userInfo: { ...x.data } });
+      })
       .catch(() => {});
-  });
+  }, []);
 
   return (
     <Frame>
@@ -104,10 +107,20 @@ function Profile({ data, dataf }: { data: Data; dataf: Function }) {
         {data.isModify ? (
           <Logout
             onClick={() => {
-              dataf({
-                userInfo: udata,
-                isModify: false,
-              });
+              console.log(udata);
+              axios
+                .patch(process.env.REACT_APP_SERVER_URL + `/user` || "", {
+                  id: data.userInfo.id,
+                  ...udata,
+                })
+                .then((e) => {
+                  console.log(e);
+                  dataf({
+                    userInfo: { ...data.userInfo, ...udata },
+                    isModify: false,
+                  });
+                })
+                .catch();
             }}
           >
             수정
@@ -153,9 +166,9 @@ function Profile({ data, dataf }: { data: Data; dataf: Function }) {
         ></LabelLine>
 
         <LabelLine
-          data={""}
+          data={data.userInfo.statusMessage || ""}
           udataf={udataf}
-          label={"message"}
+          label={"statusMessage"}
           type={"text"}
           x={data.isModify}
         ></LabelLine>

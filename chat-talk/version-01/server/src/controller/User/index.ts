@@ -9,7 +9,7 @@ router.get("/:id", (req, res) => {
   let id = Number(req.params.id);
   user
     .findOne({
-      select: { id: true, userName: true, createdAt: true },
+      select: { id: true, userName: true, email: true, createdAt: true },
       where: { id: id },
     })
     .then((rst) => {
@@ -23,10 +23,11 @@ router.get("/:id", (req, res) => {
 router.post("/signin", (req, res) => {
   user
     .findOneOrFail({
+      select: { id: true, userName: true, email: true },
       where: { userName: req.body.userName, password: req.body.password },
     })
-    .then(() => {
-      res.status(200).send("signin");
+    .then((x) => {
+      res.status(200).send({ ...x });
     })
     .catch((err) => {
       res.status(400).send("error");
@@ -51,6 +52,7 @@ router.post("/", (req, res) => {
       });
     })
     .then((rst) => {
+      console.log(rst);
       res.status(200).send("회원가입을 축하드립니다.");
     });
 });

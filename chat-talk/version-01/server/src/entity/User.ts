@@ -24,6 +24,9 @@ export class User {
   @Column()
   email: string;
 
+  @Column()
+  statusMessage: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
