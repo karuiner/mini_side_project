@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { Data } from "../interface/datainterface";
 import Labelinput from "../etc/labelInput";
+import axios from "axios";
+import { useState } from "react";
+import { stringify } from "querystring";
 
 const Frame = styled.div`
   height: 100%;
@@ -11,6 +14,7 @@ const Frame = styled.div`
   flex-direction: column;
 `;
 
+const url = process.env.REACT_APP_SERVER_URL || "";
 const WindowBox = styled.div`
   display: flex;
   height: 80%;
@@ -32,8 +36,17 @@ const Button = styled.div`
   border-radius: 10px;
   border: 2px solid black;
 `;
+interface Idata {
+  userName: string;
+  password: string;
+}
 
 function Login({ dataf }: { dataf: Function }) {
+  let [idata, idataf] = useState<{ userName: string; password: string }>({
+    userName: "",
+    password: "",
+  });
+
   return (
     <Frame>
       <WindowBox>
@@ -41,14 +54,22 @@ function Login({ dataf }: { dataf: Function }) {
           <Labelinput
             label={"username"}
             type={"text"}
-            f={() => {}}
+            f={(v: string) => {
+              if (v.length > 0) {
+                idataf({ ...idata, userName: v });
+              }
+            }}
           ></Labelinput>
         </ColumnBox>
         <ColumnBox>
           <Labelinput
             label={"password"}
             type={"password"}
-            f={() => {}}
+            f={(v: string) => {
+              if (v.length > 0) {
+                idataf({ ...idata, password: v });
+              }
+            }}
           ></Labelinput>
         </ColumnBox>
         <ColumnBox>
@@ -61,7 +82,15 @@ function Login({ dataf }: { dataf: Function }) {
           </Button>
           <Button
             onClick={() => {
-              dataf({ isLogin: true });
+              axios
+                .post(url + "/user/signin", { ...idata })
+                .then((x) => {
+                  console.log(x, idata);
+                  dataf({ isLogin: true });
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             }}
           >
             로그인

@@ -4,11 +4,13 @@ import { AppDataSource } from "./data-source";
 import Control from "./controller";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import * as cors from "cors";
 
 AppDataSource.initialize()
   .then(() => {
     const app = express();
     app.use(bodyParser.json());
+    app.use(cors());
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
       /* options */

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import styled from "styled-components";
 import Labelinput from "../etc/labelInput";
@@ -38,6 +39,7 @@ interface Udata {
   password: string;
   email: string;
 }
+const url = process.env.REACT_APP_SERVER_URL || "";
 
 function Resister({ dataf }: { dataf: Function }) {
   let [udata, udataf] = useState<Udata>({
@@ -45,6 +47,7 @@ function Resister({ dataf }: { dataf: Function }) {
     password: "",
     email: "",
   });
+
   return (
     <Frame>
       <WindowBox>
@@ -87,7 +90,14 @@ function Resister({ dataf }: { dataf: Function }) {
         <ColumnBox>
           <Button
             onClick={() => {
-              dataf({ isLogin: true, isResister: false, userInfo: udata });
+              axios
+                .post(url + "/user/", { ...udata })
+                .then((x) => {
+                  dataf({ isLogin: true, isResister: false, userInfo: udata });
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             }}
           >
             회원 가입

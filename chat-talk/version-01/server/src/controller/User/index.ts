@@ -22,7 +22,7 @@ router.get("/:id", (req, res) => {
 
 router.post("/signin", (req, res) => {
   user
-    .findOne({
+    .findOneOrFail({
       where: { userName: req.body.userName, password: req.body.password },
     })
     .then(() => {

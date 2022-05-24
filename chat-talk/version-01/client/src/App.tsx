@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Chat from "./components/chat/chat";
 import Addbox from "./components/etc/addbox";
 import { Data } from "./components/interface/datainterface";
 import Main from "./components/main/main";
@@ -32,9 +31,10 @@ const Box = styled.div`
   background-color: white;
   border: 1px solid black;
 `;
-
+let test = process.env;
 function App() {
   console.log(window.innerHeight, window.innerWidth);
+  console.log(process.env.REACT_APP_SERVER_URL);
   let [isLogin, isloginf] = useState(false);
   let [data, dataf] = useState<Data>({
     isLogin: false,

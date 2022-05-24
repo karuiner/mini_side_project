@@ -4,6 +4,7 @@ import { Data } from "../interface/datainterface";
 import base from "../../image/default.png";
 import LabelLine from "./Labelline";
 import Passwordinput from "./passwordinput";
+import axios from "axios";
 
 const Frame = styled.div`
   height: 100%;
@@ -73,6 +74,12 @@ interface user {
 
 function Profile({ data, dataf }: { data: Data; dataf: Function }) {
   let [udata, udataf] = useState<user>({});
+  useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_SERVER_URL + `/user/${1}` || "")
+      .then((x) => {})
+      .catch(() => {});
+  });
 
   return (
     <Frame>
