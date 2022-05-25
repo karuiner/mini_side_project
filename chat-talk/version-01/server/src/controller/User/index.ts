@@ -26,6 +26,24 @@ router.get("/:id", (req, res) => {
     });
 });
 
+router.get("/name/:name", (req, res) => {
+  user
+    .findOne({
+      select: {
+        id: true,
+        userName: true,
+        statusMessage: true,
+      },
+      where: { userName: req.params.name },
+    })
+    .then((rst) => {
+      res.status(200).send(rst);
+    })
+    .catch(() => {
+      res.status(400).send("잘못된 회원 이름입니다.");
+    });
+});
+
 router.post("/signin", (req, res) => {
   user
     .findOneOrFail({
