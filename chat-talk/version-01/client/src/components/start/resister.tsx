@@ -1,3 +1,5 @@
+import axios from "axios";
+import { checkPrime } from "crypto";
 import { useState } from "react";
 import styled from "styled-components";
 import Labelinput from "../etc/labelInput";
@@ -38,6 +40,7 @@ interface Udata {
   password: string;
   email: string;
 }
+const url = process.env.REACT_APP_SERVER_URL || "";
 
 function Resister({ dataf }: { dataf: Function }) {
   let [udata, udataf] = useState<Udata>({
@@ -45,6 +48,23 @@ function Resister({ dataf }: { dataf: Function }) {
     password: "",
     email: "",
   });
+
+  function check() {
+    if (udata.userName.length === 0) {
+      return false;
+    }
+
+    if (udata.password.length === 0) {
+      return false;
+    }
+
+    if (udata.email.length === 0) {
+      return false;
+    }
+
+    return true;
+  }
+
   return (
     <Frame>
       <WindowBox>
@@ -87,7 +107,21 @@ function Resister({ dataf }: { dataf: Function }) {
         <ColumnBox>
           <Button
             onClick={() => {
-              dataf({ isLogin: true, isResister: false, userInfo: udata });
+              if (check()) {
+                axios
+                  .post(url + "/user/", { ...udata })
+                  .then((x) => {
+                    console.log(x);
+                    dataf({
+                      isLogin: true,
+                      isResister: false,
+                      userInfo: { ...x.data },
+                    });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
             }}
           >
             회원 가입

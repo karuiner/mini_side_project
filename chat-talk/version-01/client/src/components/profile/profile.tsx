@@ -4,6 +4,7 @@ import { Data } from "../interface/datainterface";
 import base from "../../image/default.png";
 import LabelLine from "./Labelline";
 import Passwordinput from "./passwordinput";
+import axios from "axios";
 
 const Frame = styled.div`
   height: 100%;
@@ -63,16 +64,38 @@ const PasswordLine = styled.div`
   justify-content: center;
   align-items: center;
 `;
+const Button = styled.div`
+  display: flex;
+  height: 50%;
+  width: 25%;
+  background-color: white;
+  border-radius: 20px;
+  font-size: 20px;
+  color: red;
+  font-weight: bold;
+  border: 1px solid black;
+  justify-content: center;
+  align-items: center;
+`;
 
 interface user {
   userName?: string;
   password?: string;
   email?: string;
-  message?: string;
+  statusMessage?: string;
 }
 
 function Profile({ data, dataf }: { data: Data; dataf: Function }) {
   let [udata, udataf] = useState<user>({});
+  useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_SERVER_URL + `/user/${data.userInfo.id}` || "")
+      .then((x) => {
+        console.log(x.data);
+        dataf({ userInfo: { ...x.data } });
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <Frame>
@@ -97,10 +120,20 @@ function Profile({ data, dataf }: { data: Data; dataf: Function }) {
         {data.isModify ? (
           <Logout
             onClick={() => {
-              dataf({
-                userInfo: udata,
-                isModify: false,
-              });
+              console.log(udata);
+              axios
+                .patch(process.env.REACT_APP_SERVER_URL + `/user` || "", {
+                  id: data.userInfo.id,
+                  data: { ...udata },
+                })
+                .then((e) => {
+                  console.log(e);
+                  dataf({
+                    userInfo: { ...data.userInfo, ...udata },
+                    isModify: false,
+                  });
+                })
+                .catch();
             }}
           >
             수정
@@ -146,15 +179,36 @@ function Profile({ data, dataf }: { data: Data; dataf: Function }) {
         ></LabelLine>
 
         <LabelLine
-          data={""}
+          data={data.userInfo.statusMessage || ""}
           udataf={udataf}
-          label={"message"}
+          label={"statusMessage"}
           type={"text"}
           x={data.isModify}
         ></LabelLine>
 
         <PasswordLine>
-          {data.isModify ? <Passwordinput f={udataf}></Passwordinput> : null}
+          {data.isModify ? (
+            <Passwordinput f={udataf}></Passwordinput>
+          ) : (
+            <Button
+              onClick={() => {
+                axios
+                  .delete(
+                    process.env.REACT_APP_SERVER_URL +
+                      `/user/${data.userInfo.id}` || ""
+                  )
+                  .then(() => {
+                    dataf({}, true);
+                    console.log("탈퇴 완료");
+                  })
+                  .catch(() => {
+                    console.log("탈퇴 실패");
+                  });
+              }}
+            >
+              탈퇴
+            </Button>
+          )}
         </PasswordLine>
       </InfoBox>
     </Frame>

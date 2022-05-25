@@ -9,7 +9,13 @@ router.get("/:id", (req, res) => {
   let id = Number(req.params.id);
   user
     .findOne({
-      select: { id: true, userName: true, createdAt: true },
+      select: {
+        id: true,
+        userName: true,
+        statusMessage: true,
+        email: true,
+        createdAt: true,
+      },
       where: { id: id },
     })
     .then((rst) => {
@@ -22,11 +28,18 @@ router.get("/:id", (req, res) => {
 
 router.post("/signin", (req, res) => {
   user
-    .findOne({
+    .findOneOrFail({
+      select: {
+        id: true,
+        userName: true,
+        statusMessage: true,
+        email: true,
+        createdAt: true,
+      },
       where: { userName: req.body.userName, password: req.body.password },
     })
-    .then(() => {
-      res.status(200).send("signin");
+    .then((x) => {
+      res.status(200).send({ ...x });
     })
     .catch((err) => {
       res.status(400).send("error");
@@ -46,16 +59,37 @@ router.post("/", (req, res) => {
       res.status(400).send("동일한 아이디 존재");
     })
     .catch((err) => {
-      return user.insert({ ...req.body }).catch(() => {
-        res.status(400).send("입력값이 잘못 되었습니다.");
+      return user
+        .insert({ ...req.body, statusMessage: "" })
+        .then((x) => {
+          return x.identifiers[0].id;
+        })
+        .catch(() => {
+          res.status(400).send("입력값이 잘못 되었습니다.");
+        });
+    })
+    .then((rst) => {
+      return user.findOneOrFail({
+        select: {
+          id: true,
+          userName: true,
+          statusMessage: true,
+          email: true,
+          createdAt: true,
+        },
+        where: { id: rst },
       });
     })
     .then((rst) => {
-      res.status(200).send("회원가입을 축하드립니다.");
+      res.status(200).send(rst);
+    })
+    .catch(() => {
+      res.status(400).send("회원 등록을 실패하였습니다.");
     });
 });
 
 router.patch("/", (req, res) => {
+  console.log(req.body.data);
   user
     .update(req.body.id, { ...req.body.data })
     .then(() => {
@@ -66,9 +100,10 @@ router.patch("/", (req, res) => {
     });
 });
 
-router.delete("/", (req, res) => {
+router.delete("/:id", (req, res) => {
+  let id = Number(req.params.id);
   user
-    .delete(req.body.id)
+    .delete(id)
     .then(() => {
       res.status(200).send("정상적으로 탈퇴 되었습니다.");
     })

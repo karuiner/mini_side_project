@@ -51,7 +51,7 @@ function LabelLine({
           <Input
             type={type}
             onChange={(e) => {
-              udataf({ label: e.target.value });
+              udataf({ [label]: e.target.value });
             }}
           ></Input>
         </InputBox>
