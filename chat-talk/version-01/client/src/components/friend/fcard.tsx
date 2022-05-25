@@ -1,10 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
+import dimage from "../../image/default.png";
 
 const Frame = styled.div`
   width: 100%;
   display: flex;
   flex: 1 0 0;
+  padding-left: 5px;
 `;
 
 const ImageBox = styled.div`
@@ -14,8 +16,18 @@ const ImageBox = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+const Img = styled.img`
+  display: flex;
+  height: 90%;
+  flex: 1 0 0;
+  object-fit: contain;
+`;
+
 const Tbox = styled.div`
   display: flex;
+
+  align-items: center;
 `;
 
 const TextBox = styled.div`
@@ -25,13 +37,17 @@ const TextBox = styled.div`
   flex-direction: column;
 `;
 const NameLine = styled.div`
-  display: 1 0 0;
+  display: flex;
   flex: 1 0 0;
+  padding-left 10px;
+  align-items: center;
 `;
 
 const TextLine = styled.div`
-  display: 1 0 0;
+  display: flex;
   flex: 1 0 0;
+  padding-left 10px;
+  align-items: center;
 `;
 const Tail = styled.div`
   width: 20px;
@@ -44,18 +60,24 @@ const Remove = styled.button`
   border-radius: 50%;
 `;
 
-function Fcard({ f }: { f: Function }) {
+interface user {
+  id: number;
+  userName: string;
+  statusMessage: string;
+}
+
+function Fcard({ id, user, f }: { id: number; user: user; f: Function }) {
   return (
     <Frame>
       <ImageBox>
-        <Tbox>{"image"}</Tbox>
+        <Img src={dimage}></Img>
       </ImageBox>
       <TextBox>
         <NameLine>
-          <Tbox>{"name"}</Tbox>
+          <Tbox>{user.userName}</Tbox>
         </NameLine>
         <TextLine>
-          <Tbox>{"text"}</Tbox>
+          <Tbox>{user.statusMessage}</Tbox>
         </TextLine>
       </TextBox>
       <Tail>

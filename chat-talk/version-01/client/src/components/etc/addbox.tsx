@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useState } from "react";
 import styled from "styled-components";
 import { Data } from "../interface/datainterface";
 
@@ -33,6 +35,8 @@ const ESC = styled.button`
 `;
 
 function Addbox({ data, dataf }: { data: Data; dataf: Function }) {
+  let [idata, idataf] = useState("");
+
   return (
     <Frame>
       <InnerFrame>
@@ -42,11 +46,42 @@ function Addbox({ data, dataf }: { data: Data; dataf: Function }) {
             : "생성하실 대화방의 이름을 적어주세요"}
         </MessageBox>
         <Line>
-          <InputBox placeholder="입력해주세요"></InputBox>
+          <InputBox
+            placeholder="입력해주세요"
+            value={idata}
+            onChange={(e) => {
+              idataf(e.target.value);
+            }}
+          ></InputBox>
           <Button
             onClick={() => {
               if (data.content === "friend") {
-                dataf({ friends: [...data.friends, {}], boxOn: false });
+                if (idata !== data.userInfo.userName) {
+                  axios
+                    .get(
+                      process.env.REACT_APP_SERVER_URL + `/user/name/${idata}`
+                    )
+                    .then((rst) => {
+                      return axios
+                        .post(
+                          process.env.REACT_APP_SERVER_URL + `/friend` || "",
+                          {
+                            hostId: data.userInfo.id,
+                            friendId: rst.data.id,
+                          }
+                        )
+                        .then((x) => {
+                          console.log(x);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        })
+                        .finally(() => {
+                          dataf({ boxOn: false });
+                        });
+                    })
+                    .catch();
+                }
               } else {
                 dataf({ room: [...data.room, {}], boxOn: false });
               }

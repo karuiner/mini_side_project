@@ -4,10 +4,15 @@ interface userInfo {
   email?: string;
   statusMessage?: string;
 }
+interface puser {
+  id: number;
+  userName: string;
+  statusMessage: string;
+}
+
 interface friend {
   id: number;
-  uid: number;
-  userName: string;
+  puser: puser;
 }
 interface member {
   id: number;

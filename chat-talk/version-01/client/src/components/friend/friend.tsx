@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Data } from "../interface/datainterface";
 import Fcard from "./fcard";
@@ -56,7 +57,7 @@ const ContentInner = styled.div`
 
 const CardBox = styled.div`
   display: flex;
-  height: 15%;
+  height: 16%;
   min-height: 80px;
   width: 100%;
   margin: 5px;
@@ -65,11 +66,16 @@ const CardBox = styled.div`
 `;
 
 function Friend({ data, dataf }: { data: Data; dataf: Function }) {
+  let [update, updatef] = useState(false);
   useEffect(() => {
-    if (data.friends.length === 0) {
-      dataf({ friends: Array(20).fill({}) });
-    }
-  });
+    axios
+      .get(
+        process.env.REACT_APP_SERVER_URL + `/friend/${data.userInfo.id}` || ""
+      )
+      .then((x) => {
+        dataf({ friends: [...x.data] });
+      });
+  }, [data.boxOn, update]);
 
   return (
     <Frame>
@@ -77,7 +83,6 @@ function Friend({ data, dataf }: { data: Data; dataf: Function }) {
         <Count>{`친구 ${data.friends.length}명`}</Count>
         <Button
           onClick={() => {
-            // dataf({ friends: [...data.friends, {}] });
             dataf({ boxOn: true });
           }}
         >
@@ -90,13 +95,20 @@ function Friend({ data, dataf }: { data: Data; dataf: Function }) {
             return (
               <CardBox key={i}>
                 <Fcard
+                  id={x.id}
+                  user={x.puser}
                   f={() => {
-                    dataf({
-                      friends: [
-                        ...data.friends.slice(0, i),
-                        ...data.friends.slice(i + 1),
-                      ],
-                    });
+                    axios
+                      .delete(
+                        process.env.REACT_APP_SERVER_URL + `/friend/${x.id}` ||
+                          ""
+                      )
+                      .then(() => {
+                        updatef(!update);
+                      })
+                      .catch(() => {
+                        console.log("fail");
+                      });
                   }}
                 ></Fcard>
               </CardBox>

@@ -10,7 +10,7 @@ router.get("/:id", (req, res) => {
   let id = Number(req.params.id);
   friend
     .find({
-      select: { puser: { id: true, userName: true } },
+      select: { puser: { id: true, userName: true, statusMessage: true } },
       relations: { puser: true },
       where: { user: { id: id } },
     })
