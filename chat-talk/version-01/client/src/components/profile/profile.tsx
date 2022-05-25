@@ -64,6 +64,19 @@ const PasswordLine = styled.div`
   justify-content: center;
   align-items: center;
 `;
+const Button = styled.div`
+  display: flex;
+  height: 50%;
+  width: 25%;
+  background-color: white;
+  border-radius: 20px;
+  font-size: 20px;
+  color: red;
+  font-weight: bold;
+  border: 1px solid black;
+  justify-content: center;
+  align-items: center;
+`;
 
 interface user {
   userName?: string;
@@ -111,7 +124,7 @@ function Profile({ data, dataf }: { data: Data; dataf: Function }) {
               axios
                 .patch(process.env.REACT_APP_SERVER_URL + `/user` || "", {
                   id: data.userInfo.id,
-                  ...udata,
+                  data: { ...udata },
                 })
                 .then((e) => {
                   console.log(e);
@@ -174,7 +187,28 @@ function Profile({ data, dataf }: { data: Data; dataf: Function }) {
         ></LabelLine>
 
         <PasswordLine>
-          {data.isModify ? <Passwordinput f={udataf}></Passwordinput> : null}
+          {data.isModify ? (
+            <Passwordinput f={udataf}></Passwordinput>
+          ) : (
+            <Button
+              onClick={() => {
+                axios
+                  .delete(
+                    process.env.REACT_APP_SERVER_URL +
+                      `/user/${data.userInfo.id}` || ""
+                  )
+                  .then(() => {
+                    dataf({}, true);
+                    console.log("탈퇴 완료");
+                  })
+                  .catch(() => {
+                    console.log("탈퇴 실패");
+                  });
+              }}
+            >
+              탈퇴
+            </Button>
+          )}
         </PasswordLine>
       </InfoBox>
     </Frame>

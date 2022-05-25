@@ -111,10 +111,11 @@ function Resister({ dataf }: { dataf: Function }) {
                 axios
                   .post(url + "/user/", { ...udata })
                   .then((x) => {
+                    console.log(x);
                     dataf({
                       isLogin: true,
                       isResister: false,
-                      userInfo: udata,
+                      userInfo: { ...x.data },
                     });
                   })
                   .catch((err) => {

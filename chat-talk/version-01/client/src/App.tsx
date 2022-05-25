@@ -47,8 +47,22 @@ function App() {
     friends: [],
     room: [],
   });
-  function IDF(input: {}) {
-    dataf({ ...data, ...input });
+  function IDF(input: {}, init = false) {
+    if (!init) {
+      dataf({ ...data, ...input });
+    } else {
+      dataf({
+        isLogin: false,
+        isResister: false,
+        isChatting: false,
+        isModify: false,
+        boxOn: false,
+        content: "friend",
+        userInfo: {},
+        friends: [],
+        room: [],
+      });
+    }
   }
 
   return (
