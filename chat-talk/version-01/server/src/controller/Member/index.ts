@@ -1,4 +1,5 @@
 import * as express from "express";
+import { In } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import { Member } from "../../entity/Member";
 import { Room } from "../../entity/Room";
@@ -32,6 +33,26 @@ router.post("/", (req, res) => {
     .then((rdata) => {
       return user.findOne({ where: { id: uid } }).then((udata) => {
         return member.insert({ user: udata, room: rdata });
+      });
+    })
+    .then(() => {
+      res.status(200).send("멤버 추가 완료");
+    })
+    .catch(() => {
+      res.status(400).send("멤버 추가 실패");
+    });
+});
+
+router.post("/many", (req, res) => {
+  let [uids, rid] = [req.body.userIds, req.body.roomId];
+  room
+    .findOne({ where: { id: rid } })
+    .then((rdata) => {
+      return user.find({ where: { id: In(uids) } }).then((udata) => {
+        let data = udata.map((x) => {
+          return { user: x, room: rdata };
+        });
+        return member.insert(data);
       });
     })
     .then(() => {

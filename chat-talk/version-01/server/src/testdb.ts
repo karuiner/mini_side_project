@@ -1,3 +1,4 @@
+import { In } from "typeorm";
 import { TestDataSource } from "./data-source";
 import { Friend } from "./entity/Friend";
 import { Member } from "./entity/Member";
@@ -81,29 +82,34 @@ TestDataSource.initialize()
     //     // });
     //     console.log(rst);
     //   });
-    await friend
-      .find({
-        select: { puser: { id: true, userName: true } },
-        relations: { puser: true },
-        where: { user: { id: 1 } },
-      })
-      .then(console.log);
+    await user
+      .find({ where: { id: In([1, 3, 5, 7, 9]) } })
+      .then(console.log)
+      .catch(console.log);
 
-    await room
-      .findOne({ where: { id: 1 } })
-      .then((rdata) => {
-        return message.find({
-          where: { room: rdata },
-          order: {
-            id: "DESC",
-          },
-          take: 10,
-        });
-      })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {});
+    // await friend
+    //   .find({
+    //     select: { puser: { id: true, userName: true } },
+    //     relations: { puser: true },
+    //     where: { user: { id: 1 } },
+    //   })
+    //   .then(console.log);
+
+    // await room
+    //   .findOne({ where: { id: 1 } })
+    //   .then((rdata) => {
+    //     return message.find({
+    //       where: { room: rdata },
+    //       order: {
+    //         id: "DESC",
+    //       },
+    //       take: 10,
+    //     });
+    //   })
+    //   .then((data) => {
+    //     console.log(data);
+    //   })
+    //   .catch((err) => {});
   })
   .then(async () => {
     await TestDataSource.destroy();

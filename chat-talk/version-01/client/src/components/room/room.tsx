@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Data } from "../interface/datainterface";
+import NewRoom from "./newroom";
 import RoomCard from "./roomcard";
 
 const Frame = styled.div`
@@ -62,49 +64,62 @@ const CardBox = styled.div`
 `;
 
 function Room({ data, dataf }: { data: Data; dataf: Function }) {
+  let [nr, nrf] = useState(false);
+
   useEffect(() => {
-    if (data.room.length === 0) {
-      dataf({ room: Array(20).fill({}) });
-    }
-  });
+    axios
+      .get(process.env.REACT_APP_SERVER_URL + `/room/${data.userInfo.id}` || "")
+      .then((x) => {
+        console.log(x.data);
+        dataf({ room: [...x.data] });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [nr]);
 
   return (
     <Frame>
-      <Line>
-        <Button
-          onClick={() => {
-            // dataf({ friends: [...data.friends, {}] });
-            dataf({ boxOn: true });
-          }}
-        >
-          {"새 대화방"}
-        </Button>
-      </Line>
-      <Content>
-        <ContentInner>
-          {data.friends.map((x, i) => {
-            return (
-              <CardBox
-                key={i}
-                onClick={() => {
-                  dataf({ isChatting: true });
-                }}
-              >
-                <RoomCard
-                  f={() => {
-                    dataf({
-                      friends: [
-                        ...data.friends.slice(0, i),
-                        ...data.friends.slice(i + 1),
-                      ],
-                    });
-                  }}
-                ></RoomCard>
-              </CardBox>
-            );
-          })}
-        </ContentInner>
-      </Content>
+      {nr ? (
+        <NewRoom data={data} dataf={dataf} nrf={nrf}></NewRoom>
+      ) : (
+        <>
+          <Line>
+            <Button
+              onClick={() => {
+                nrf(true);
+              }}
+            >
+              {"새 대화방"}
+            </Button>
+          </Line>
+          <Content>
+            <ContentInner>
+              {data.room.map((x, i) => {
+                return (
+                  <CardBox
+                    key={i}
+                    onClick={() => {
+                      dataf({ isChatting: true });
+                    }}
+                  >
+                    <RoomCard
+                      f={() => {
+                        dataf({
+                          friends: [
+                            ...data.friends.slice(0, i),
+                            ...data.friends.slice(i + 1),
+                          ],
+                        });
+                      }}
+                    ></RoomCard>
+                  </CardBox>
+                );
+              })}
+            </ContentInner>
+          </Content>
+        </>
+      )}
     </Frame>
   );
 }

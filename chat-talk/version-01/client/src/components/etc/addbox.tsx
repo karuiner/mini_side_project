@@ -83,7 +83,19 @@ function Addbox({ data, dataf }: { data: Data; dataf: Function }) {
                     .catch();
                 }
               } else {
-                dataf({ room: [...data.room, {}], boxOn: false });
+                axios
+                  .post(process.env.REACT_APP_SERVER_URL + `/room` || "", {
+                    roomName: idata,
+                  })
+                  .then((x) => {
+                    console.log(x);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  })
+                  .finally(() => {
+                    dataf({ boxOn: false });
+                  });
               }
             }}
           >
