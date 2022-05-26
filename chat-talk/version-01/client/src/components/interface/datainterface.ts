@@ -44,4 +44,4 @@ interface Data {
   room: room[];
 }
 
-export type { Data, userInfo, friend, message, room, member };
+export type { Data, userInfo, friend, message, room, member, puser };

@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/:id", (req, res) => {
   let id = Number(req.params.id);
   user
-    .findOne({
+    .findOneOrFail({
       select: {
         id: true,
         userName: true,

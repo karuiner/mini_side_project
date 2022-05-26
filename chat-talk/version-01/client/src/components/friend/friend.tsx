@@ -67,11 +67,10 @@ const CardBox = styled.div`
 
 function Friend({ data, dataf }: { data: Data; dataf: Function }) {
   let [update, updatef] = useState(false);
+  let id = data.userInfo.id;
   useEffect(() => {
     axios
-      .get(
-        process.env.REACT_APP_SERVER_URL + `/friend/${data.userInfo.id}` || ""
-      )
+      .get(process.env.REACT_APP_SERVER_URL + `/friend/${id}` || "")
       .then((x) => {
         dataf({ friends: [...x.data] });
       });

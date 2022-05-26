@@ -1,9 +1,12 @@
 import * as express from "express";
+import { In } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import { Member } from "../../entity/Member";
 import { Room } from "../../entity/Room";
+import { User } from "../../entity/User";
 const member = AppDataSource.getRepository(Member);
 const room = AppDataSource.getRepository(Room);
+const user = AppDataSource.getRepository(User);
 const router = express.Router();
 
 router.get("/:id", (req, res) => {
@@ -26,9 +29,21 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  let roomName = req.body.roomName ? req.body.roomName : "";
+  let roomName = req.body.roomName ? req.body.roomName : "",
+    uids = req.body.userIds;
   room
     .insert({ roomName: roomName, lastMessage: "" })
+    .then((x) => {
+      return room.findOne({ where: { id: x.identifiers[0].id } });
+    })
+    .then((room) => {
+      return user.find({ where: { id: In(uids) } }).then((udata) => {
+        let data = udata.map((x) => {
+          return { user: x, room: room };
+        });
+        return member.insert(data);
+      });
+    })
     .then((x) => {
       res.status(200).send("대화방 생성");
     })
