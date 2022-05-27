@@ -13,6 +13,7 @@ router.get("/:id", (req, res) => {
       select: { puser: { id: true, userName: true, statusMessage: true } },
       relations: { puser: true },
       where: { user: { id: id } },
+      order: { puser: { userName: "ASC" } },
     })
     .then((data) => {
       res.status(200).send(data);

@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Data } from "../interface/datainterface";
+import { Data, room } from "../interface/datainterface";
 import NewRoom from "./newroom";
 import RoomCard from "./roomcard";
-
+import io from "socket.io-client";
+const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 const Frame = styled.div`
   height: 100%;
   width: 100%;
@@ -70,12 +71,11 @@ function Room({ data, dataf }: { data: Data; dataf: Function }) {
     axios
       .get(process.env.REACT_APP_SERVER_URL + `/room/${data.userInfo.id}` || "")
       .then((x) => {
-        console.log(x.data);
+        socketClient.emit("room_set", { data: x.data.map((x: room) => x.id) });
+
         dataf({ room: [...x.data] });
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }, [nr]);
 
   return (
@@ -96,14 +96,24 @@ function Room({ data, dataf }: { data: Data; dataf: Function }) {
           <Content>
             <ContentInner>
               {data.room.map((x, i) => {
+                let name =
+                  x.roomName.length > 0
+                    ? x.roomName
+                    : x.member
+                        .map((x) => x.user.userName)
+                        .filter((x) => x !== data.userInfo.userName)
+                        .join(", ");
                 return (
                   <CardBox
                     key={i}
                     onClick={() => {
-                      dataf({ isChatting: true });
+                      dataf({ isChatting: true, chat: { roomId: x.id } });
                     }}
                   >
                     <RoomCard
+                      name={name}
+                      message={x.lastMessage}
+                      c={x.member.length}
                       f={() => {
                         dataf({
                           friends: [

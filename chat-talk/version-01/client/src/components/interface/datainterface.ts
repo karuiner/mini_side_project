@@ -14,10 +14,15 @@ interface friend {
   id: number;
   puser: puser;
 }
+
+interface user {
+  id: number;
+  userName: string;
+}
+
 interface member {
   id: number;
-  uid: number;
-  userName: string;
+  user: user;
 }
 interface message {
   userName: string;
@@ -27,9 +32,12 @@ interface message {
 
 interface room {
   id: number;
-  name: string;
-  members: member[];
-  message: message[];
+  roomName: string;
+  member: member[];
+  lastMessage: string;
+}
+interface chat {
+  roomId: number;
 }
 
 interface Data {
@@ -42,6 +50,7 @@ interface Data {
   userInfo: userInfo;
   friends: friend[];
   room: room[];
+  chat: chat;
 }
 
 export type { Data, userInfo, friend, message, room, member, puser };
