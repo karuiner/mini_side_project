@@ -89,23 +89,22 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
   let [set, setf] = useState(false);
   let [msg, msgf] = useState("");
   let [srnm, srnmf] = useState("");
-
-  socketClient.on("message_to_client", (req) => {
+  socketClient.emit("connection", "connect");
+  socketClient.emit("room_in", {
+    userId: data.userInfo.id,
+    roomId: data.chat.roomId,
+  });
+  socketClient.on("message", (req) => {
     console.log(req);
     df([
       ...dummy,
       {
-        userName: req.userName || "noname",
-        message: req.message,
+        userName: req.data.userName || "noname",
+        message: req.data.message,
         time: "time",
       },
     ]);
   });
-
-  //   socketClient.emit("first Request", { data: "first Reuqest" });
-  //   socketClient.on("first Respond", (req) => {
-  //     console.log(req);
-  //   });
 
   useEffect(() => {
     let cbox = document.getElementById("testest");
@@ -125,7 +124,7 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
 
   return (
     <Frame>
-      {set ? <Setting f={setf}></Setting> : null}
+      {set ? <Setting dataf={dataf} f={setf}></Setting> : null}
       <Button>
         <button
           onClick={() => {
@@ -164,7 +163,7 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
         <Ibutton
           onClick={() => {
             if (msg.length > 0) {
-              socketClient.emit("message_to_server", {
+              socketClient.emit("message", {
                 roomId: data.chat.roomId,
                 data: {
                   id: data.userInfo.id,

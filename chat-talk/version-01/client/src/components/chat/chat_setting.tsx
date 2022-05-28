@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MemberCard from "./membercard";
@@ -78,7 +79,7 @@ interface Dummy {
   friend: boolean;
 }
 
-function Setting({ f }: { f: Function }) {
+function Setting({ dataf, f }: { dataf: Function; f: Function }) {
   let [dummy, dummyf] = useState<Dummy[]>([]);
   useEffect(() => {
     if (dummy.length === 0) {
@@ -119,6 +120,7 @@ function Setting({ f }: { f: Function }) {
           <button
             onClick={() => {
               f(false);
+              dataf({ isChatting: false });
             }}
           >
             {"나가기"}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { Data } from "../interface/datainterface";
+import dimage from "../../image/default.png";
 
 const Frame = styled.div`
   box-sizing: border-box;
@@ -68,7 +69,7 @@ function Message({
   return (
     <Frame>
       <ImageBox>
-        <Image></Image>
+        <Image src={dimage}></Image>
       </ImageBox>
       <OtherBox>
         <NameLine>

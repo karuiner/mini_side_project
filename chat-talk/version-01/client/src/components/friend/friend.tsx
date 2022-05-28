@@ -67,6 +67,7 @@ const CardBox = styled.div`
 
 function Friend({ data, dataf }: { data: Data; dataf: Function }) {
   let [update, updatef] = useState(false);
+  let [add, addf] = useState(false);
   let id = data.userInfo.id;
   useEffect(() => {
     axios
@@ -78,43 +79,49 @@ function Friend({ data, dataf }: { data: Data; dataf: Function }) {
 
   return (
     <Frame>
-      <Line>
-        <Count>{`친구 ${data.friends.length}명`}</Count>
-        <Button
-          onClick={() => {
-            dataf({ boxOn: true });
-          }}
-        >
-          {"친구 추가"}
-        </Button>
-      </Line>
-      <Content>
-        <ContentInner>
-          {data.friends.map((x, i) => {
-            return (
-              <CardBox key={i}>
-                <Fcard
-                  id={x.id}
-                  user={x.puser}
-                  f={() => {
-                    axios
-                      .delete(
-                        process.env.REACT_APP_SERVER_URL + `/friend/${x.id}` ||
-                          ""
-                      )
-                      .then(() => {
-                        updatef(!update);
-                      })
-                      .catch(() => {
-                        console.log("fail");
-                      });
-                  }}
-                ></Fcard>
-              </CardBox>
-            );
-          })}
-        </ContentInner>
-      </Content>
+      {add ? (
+        <></>
+      ) : (
+        <>
+          <Line>
+            <Count>{`친구 ${data.friends.length}명`}</Count>
+            <Button
+              onClick={() => {
+                dataf({ boxOn: true });
+              }}
+            >
+              {"친구 추가"}
+            </Button>
+          </Line>
+          <Content>
+            <ContentInner>
+              {data.friends.map((x, i) => {
+                return (
+                  <CardBox key={i}>
+                    <Fcard
+                      id={x.id}
+                      user={x.puser}
+                      f={() => {
+                        axios
+                          .delete(
+                            process.env.REACT_APP_SERVER_URL +
+                              `/friend/${x.id}` || ""
+                          )
+                          .then(() => {
+                            updatef(!update);
+                          })
+                          .catch(() => {
+                            console.log("fail");
+                          });
+                      }}
+                    ></Fcard>
+                  </CardBox>
+                );
+              })}
+            </ContentInner>
+          </Content>
+        </>
+      )}
     </Frame>
   );
 }

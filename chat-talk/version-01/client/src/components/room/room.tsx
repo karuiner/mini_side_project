@@ -71,8 +71,6 @@ function Room({ data, dataf }: { data: Data; dataf: Function }) {
     axios
       .get(process.env.REACT_APP_SERVER_URL + `/room/${data.userInfo.id}` || "")
       .then((x) => {
-        socketClient.emit("room_set", { data: x.data.map((x: room) => x.id) });
-
         dataf({ room: [...x.data] });
       })
       .catch((err) => {});
