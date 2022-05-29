@@ -38,6 +38,7 @@ interface room {
 }
 interface chat {
   roomId: number;
+  roomIndex: number;
 }
 
 interface Data {

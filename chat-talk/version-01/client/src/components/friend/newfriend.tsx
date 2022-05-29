@@ -69,7 +69,7 @@ function NewFriend({
           {"완료"}
         </button>
       </ButtonLine>
-      <AddFriend data={data} dataf={dataf}></AddFriend>
+      <AddFriend data={data} dataf={dataf} ucheckf={() => {}}></AddFriend>
     </Frame>
   );
 }

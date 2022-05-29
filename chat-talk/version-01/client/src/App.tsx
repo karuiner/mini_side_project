@@ -42,7 +42,7 @@ const data_init = {
   userInfo: {},
   friends: [],
   room: [],
-  chat: { roomId: -1 },
+  chat: { roomId: -1, roomIndex: -1 },
 };
 
 function App() {

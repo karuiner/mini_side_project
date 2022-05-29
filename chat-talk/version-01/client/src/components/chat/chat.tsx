@@ -6,6 +6,8 @@ import Setting from "./chat_setting";
 import Message from "./message";
 import Message_Reverse from "./message_r";
 import io from "socket.io-client";
+import AddFriend from "../etc/addfriend";
+import NewMember from "./newmember";
 const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 const Frame = styled.div`
   height: 80vh;
@@ -78,6 +80,16 @@ const Ibutton = styled.button`
   border-bottom-right-radius: 20px;
 `;
 
+const AddFrame = styled.div`
+  box-sizing: border-box;
+  height: inherit;
+  width: inherit;
+  display: flex;
+  z-index: 3;
+  background-color: yellow;
+  position: absolute;
+`;
+
 interface Ddata {
   userName: string;
   message: string;
@@ -87,8 +99,11 @@ interface Ddata {
 function Chat({ data, dataf }: { data: Data; dataf: Function }) {
   let [dummy, df] = useState<Ddata[]>([]);
   let [set, setf] = useState(false);
+  let [add, addf] = useState(false);
   let [msg, msgf] = useState("");
-  let [srnm, srnmf] = useState("");
+  let memberId = data.room[data.chat.roomIndex].member.filter(
+    (x) => x.user.userName === data.userInfo.userName
+  )[0].id;
   socketClient.emit("connection", "connect");
   socketClient.emit("room_in", {
     userId: data.userInfo.id,
@@ -124,11 +139,37 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
 
   return (
     <Frame>
-      {set ? <Setting dataf={dataf} f={setf}></Setting> : null}
+      {add ? (
+        <NewMember data={data} dataf={dataf} addf={addf}></NewMember>
+      ) : (
+        <></>
+      )}
+      {set ? (
+        <Setting
+          data={data}
+          room={data.room[data.chat.roomIndex]}
+          dataf={dataf}
+          f={setf}
+          addf={addf}
+          outf={function () {
+            axios
+              .delete(
+                process.env.REACT_APP_SERVER_URL + `/member/${memberId}` || ""
+              )
+              .then(() => {
+                setf(false);
+                dataf({ isChatting: false });
+              })
+              .catch();
+          }}
+        ></Setting>
+      ) : null}
+
       <Button>
         <button
           onClick={() => {
             dataf({ isChatting: false });
+            socketClient.emit("disconnect", "out");
           }}
         >
           {"<-"}

@@ -33,7 +33,15 @@ const ListCard = styled.div`
   width: 100%;
 `;
 
-function AddFriend({ data, dataf }: { data: Data; dataf: Function }) {
+function AddFriend({
+  data,
+  dataf,
+  ucheckf = () => {},
+}: {
+  data: Data;
+  dataf: Function;
+  ucheckf: Function;
+}) {
   let friend = [...data.friends.map((x) => x.puser)];
   let [dummy, dummyf] = useState(friend);
   let [check, checkf] = useState(Array(friend.length).fill(false));
@@ -78,6 +86,7 @@ function AddFriend({ data, dataf }: { data: Data; dataf: Function }) {
                 check={(ck: boolean) => {
                   check[i] = ck;
                   checkf(check);
+                  ucheckf(check);
                 }}
               ></NRFCard>
             </ListCard>

@@ -37,6 +37,8 @@ interface Dummy {
   userName: string;
   friend: boolean;
 }
+
+//대화 상대가 친구가 아닌 경우 친구 추가 함수 추가 할것
 function MemberCard({ data, dataf }: { data: Dummy; dataf: Function }) {
   return (
     <Frame>
@@ -44,9 +46,7 @@ function MemberCard({ data, dataf }: { data: Dummy; dataf: Function }) {
         <Img src={dimage}></Img>
       </ImageBox>
       <NameBox>{data.userName}</NameBox>
-      <ButtonBox>
-        <button>{"+"}</button>
-      </ButtonBox>
+      <ButtonBox>{!data.friend ? <button>{"+"}</button> : null}</ButtonBox>
     </Frame>
   );
 }

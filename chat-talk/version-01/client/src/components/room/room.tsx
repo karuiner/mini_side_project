@@ -105,7 +105,10 @@ function Room({ data, dataf }: { data: Data; dataf: Function }) {
                   <CardBox
                     key={i}
                     onClick={() => {
-                      dataf({ isChatting: true, chat: { roomId: x.id } });
+                      dataf({
+                        isChatting: true,
+                        chat: { roomId: x.id, roomIndex: i },
+                      });
                     }}
                   >
                     <RoomCard

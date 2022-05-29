@@ -78,6 +78,7 @@ function NewRoom({
         <button
           onClick={() => {
             let userIds = dummy.map((x) => x.id).filter((x, i) => check[i]);
+            console.log(userIds);
             if (userIds.length > 0) {
               axios
                 .post(process.env.REACT_APP_SERVER_URL + `/room` || "", {
@@ -108,7 +109,7 @@ function NewRoom({
           }}
         ></input>
       </NameLine>
-      <AddFriend data={data} dataf={dataf}></AddFriend>
+      <AddFriend data={data} dataf={dataf} ucheckf={checkf}></AddFriend>
     </Frame>
   );
 }
