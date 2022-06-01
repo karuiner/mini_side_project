@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import AddFriend2 from "../etc/addfriend2";
 import { Data } from "../interface/datainterface";
 import Fcard from "./fcard";
 
@@ -80,14 +81,21 @@ function Friend({ data, dataf }: { data: Data; dataf: Function }) {
   return (
     <Frame>
       {add ? (
-        <></>
+        <AddFriend2
+          h={62}
+          ddata={[]}
+          data={data}
+          dataf={dataf}
+          nrf={addf}
+        ></AddFriend2>
       ) : (
         <>
           <Line>
             <Count>{`친구 ${data.friends.length}명`}</Count>
             <Button
               onClick={() => {
-                dataf({ boxOn: true });
+                // dataf({ boxOn: true });
+                addf(true);
               }}
             >
               {"친구 추가"}

@@ -53,7 +53,7 @@ function AddFriend({
     <Frame>
       <FnameLine>
         <input
-          placeholder="추가하실 친구의 이름을 입력해주세요"
+          placeholder="이름 검색"
           onChange={(e) => {
             let name = e.target.value;
             if (name.length > 0) {

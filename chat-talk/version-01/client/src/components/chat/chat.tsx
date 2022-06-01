@@ -8,6 +8,7 @@ import Message_Reverse from "./message_r";
 import io from "socket.io-client";
 import AddFriend from "../etc/addfriend";
 import NewMember from "./newmember";
+import AddFriend2 from "../etc/addfriend2";
 const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 const Frame = styled.div`
   height: 80vh;
@@ -19,6 +20,21 @@ const Frame = styled.div`
   z-index: 1;
   padding: 20px;
   flex-direction: column;
+`;
+
+const AddFriendFrame = styled.div`
+  box-sizing: border-box;
+  height: 80vh;
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 3;
+  padding: 20px;
+  border-radius: 20px;
+  border: 2px solid black;
+  background-color: yellow;
 `;
 const Button = styled.div`
   box-sizing: border-box;
@@ -140,7 +156,15 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
   return (
     <Frame>
       {add ? (
-        <NewMember data={data} dataf={dataf} addf={addf}></NewMember>
+        <AddFriendFrame>
+          <AddFriend2
+            h={78}
+            ddata={data.friends}
+            data={data}
+            dataf={dataf}
+            nrf={addf}
+          ></AddFriend2>
+        </AddFriendFrame>
       ) : (
         <></>
       )}

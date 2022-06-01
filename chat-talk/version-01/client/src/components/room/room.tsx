@@ -5,6 +5,7 @@ import { Data, room } from "../interface/datainterface";
 import NewRoom from "./newroom";
 import RoomCard from "./roomcard";
 import io from "socket.io-client";
+import AddFriend2 from "../etc/addfriend2";
 const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 const Frame = styled.div`
   height: 100%;
@@ -66,7 +67,6 @@ const CardBox = styled.div`
 
 function Room({ data, dataf }: { data: Data; dataf: Function }) {
   let [nr, nrf] = useState(false);
-
   useEffect(() => {
     axios
       .get(process.env.REACT_APP_SERVER_URL + `/room/${data.userInfo.id}` || "")
@@ -79,7 +79,13 @@ function Room({ data, dataf }: { data: Data; dataf: Function }) {
   return (
     <Frame>
       {nr ? (
-        <NewRoom data={data} dataf={dataf} nrf={nrf}></NewRoom>
+        <AddFriend2
+          h={68}
+          ddata={data.friends}
+          data={data}
+          dataf={dataf}
+          nrf={nrf}
+        ></AddFriend2>
       ) : (
         <>
           <Line>

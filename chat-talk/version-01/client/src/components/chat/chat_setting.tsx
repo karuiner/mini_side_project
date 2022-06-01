@@ -9,12 +9,11 @@ const Frame = styled.div`
   height: inherit;
   width: inherit;
   display: flex;
-  justify-content: flex-end;
   position: absolute;
 `;
 const InnerFrame = styled.div`
-  height: 100%;
-  width: 80%;
+  height: inherit;
+  width: inherit;
   display: flex;
   border-radius: 20px;
   padding: 20px;
