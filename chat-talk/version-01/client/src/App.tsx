@@ -46,9 +46,6 @@ const data_init = {
 };
 
 function App() {
-  // console.log(window.innerHeight, window.innerWidth);
-  // console.log(process.env.REACT_APP_SERVER_URL);
-  let [isLogin, isloginf] = useState(false);
   let [data, dataf] = useState<Data>({
     ...data_init,
   });
@@ -70,12 +67,6 @@ function App() {
         ) : (
           <Main data={data} dataf={IDF}></Main>
         )}
-
-        {data.boxOn ? (
-          <Box>
-            <Addbox data={data} dataf={IDF}></Addbox>
-          </Box>
-        ) : null}
       </AppFrame>
     </Frame>
   );

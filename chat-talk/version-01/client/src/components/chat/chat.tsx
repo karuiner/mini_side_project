@@ -11,13 +11,22 @@ import NewMember from "./newmember";
 import AddFriend2 from "../etc/addfriend2";
 const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 const Frame = styled.div`
-  height: 80vh;
-  width: 500px;
+  height: 100%;
+  width: 100%;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1;
+`;
+
+const InnerFrame = styled.div`
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
   flex-direction: column;
 `;
@@ -189,70 +198,76 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
         ></Setting>
       ) : null}
 
-      <Button>
-        <button
-          onClick={() => {
-            dataf({ isChatting: false });
-            socketClient.emit("disconnect", "out");
-          }}
-        >
-          {"<-"}
-        </button>
-        <RoomName>{``}</RoomName>
-        <button
-          onClick={() => {
-            setf(!set);
-          }}
-        >
-          설정
-        </button>
-      </Button>
-      <Content id="testest">
-        {dummy.map((x, i) => (
-          <CardBox key={i}>
-            {x.userName !== data.userInfo.userName ? (
-              <Message {...x}></Message>
-            ) : (
-              <Message_Reverse {...x}></Message_Reverse>
-            )}
-          </CardBox>
-        ))}
-      </Content>
-      <InputBox>
-        <Input
-          value={msg}
-          onChange={(e) => {
-            msgf(e.target.value);
-          }}
-        ></Input>
-        <Ibutton
-          onClick={() => {
-            if (msg.length > 0) {
-              socketClient.emit("message", {
-                roomId: data.chat.roomId,
-                data: {
-                  id: data.userInfo.id,
-                  userName: data.userInfo.userName,
-                  message: msg,
-                  time: "time",
-                },
-              });
+      {!add && !set ? (
+        <InnerFrame>
+          <Button>
+            <button
+              onClick={() => {
+                dataf({ isChatting: false });
+                socketClient.disconnect();
+              }}
+            >
+              {"<-"}
+            </button>
+            <RoomName>{``}</RoomName>
+            <button
+              onClick={() => {
+                setf(!set);
+              }}
+            >
+              설정
+            </button>
+          </Button>
+          <Content id="testest">
+            {dummy.map((x, i) => (
+              <CardBox key={i}>
+                {x.userName !== data.userInfo.userName ? (
+                  <Message {...x}></Message>
+                ) : (
+                  <Message_Reverse {...x}></Message_Reverse>
+                )}
+              </CardBox>
+            ))}
+          </Content>
+          <InputBox>
+            <Input
+              value={msg}
+              onChange={(e) => {
+                msgf(e.target.value);
+              }}
+            ></Input>
+            <Ibutton
+              onClick={() => {
+                if (msg.length > 0) {
+                  socketClient.emit("message", {
+                    roomId: data.chat.roomId,
+                    data: {
+                      id: data.userInfo.id,
+                      userName: data.userInfo.userName,
+                      message: msg,
+                      time: "time",
+                    },
+                  });
 
-              df([
-                ...dummy,
-                {
-                  userName: data.userInfo.userName || "noname",
-                  message: msg,
-                  time: "time",
-                },
-              ]);
-              msgf("");
-            }
-          }}
-        >
-          전송
-        </Ibutton>
-      </InputBox>
+                  df([
+                    ...dummy,
+                    {
+                      userName: data.userInfo.userName || "noname",
+                      message: msg,
+                      time: "time",
+                    },
+                  ]);
+                  msgf("");
+                }
+              }}
+            >
+              전송
+            </Ibutton>
+          </InputBox>
+        </InnerFrame>
+      ) : (
+        <></>
+      )}
     </Frame>
   );
 }
