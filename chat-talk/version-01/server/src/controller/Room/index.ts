@@ -12,7 +12,19 @@ const router = express.Router();
 router.get("/:id", (req, res) => {
   let id = Number(req.params.id);
   member
-    .find({ relations: { room: true }, where: { user: { id: id } } })
+    .find({
+      select: {
+        room: {
+          id: true,
+          roomName: true,
+          lastMessage: true,
+          member: { id: true, user: { id: true, userName: true } },
+        },
+      },
+      relations: { room: { member: { user: true } } },
+      where: { user: { id: id } },
+      order: { room: { id: "ASC", member: { id: "ASC" } } },
+    })
     .then((x) => {
       let rooms = [];
       x.forEach((x) => {

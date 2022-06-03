@@ -1,9 +1,15 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Data } from "../interface/datainterface";
 import Setting from "./chat_setting";
 import Message from "./message";
 import Message_Reverse from "./message_r";
+import io from "socket.io-client";
+import AddFriend from "../etc/addfriend";
+import NewMember from "./newmember";
+import AddFriend2 from "../etc/addfriend2";
+const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 const Frame = styled.div`
   height: 80vh;
   width: 500px;
@@ -14,6 +20,21 @@ const Frame = styled.div`
   z-index: 1;
   padding: 20px;
   flex-direction: column;
+`;
+
+const AddFriendFrame = styled.div`
+  box-sizing: border-box;
+  height: 80vh;
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 3;
+  padding: 20px;
+  border-radius: 20px;
+  border: 2px solid black;
+  background-color: yellow;
 `;
 const Button = styled.div`
   box-sizing: border-box;
@@ -75,6 +96,16 @@ const Ibutton = styled.button`
   border-bottom-right-radius: 20px;
 `;
 
+const AddFrame = styled.div`
+  box-sizing: border-box;
+  height: inherit;
+  width: inherit;
+  display: flex;
+  z-index: 3;
+  background-color: yellow;
+  position: absolute;
+`;
+
 interface Ddata {
   userName: string;
   message: string;
@@ -84,30 +115,85 @@ interface Ddata {
 function Chat({ data, dataf }: { data: Data; dataf: Function }) {
   let [dummy, df] = useState<Ddata[]>([]);
   let [set, setf] = useState(false);
+  let [add, addf] = useState(false);
   let [msg, msgf] = useState("");
-  if (dummy.length === 0) {
-    let dd: Ddata[] = [];
-    for (let i = 0; i < 10; i++) {
-      let name = i % 3 === 0 ? "user1" : "user2";
-      dd.push({ userName: name, message: `message${i}`, time: `time${i}` });
-    }
-    dd[8].message =
-      "sadasfhklajhfklajfdlkjsakld jsakljdklsjdklaskdlakldjk lsjdklaskdljklajdklsjak dljakljd k l sajkdljsak ljdskla jdklsjadlj kajdkl sjakdljaklsdjl";
-    // dataf({room})
-    df(dd);
-  }
+  let memberId = data.room[data.chat.roomIndex].member.filter(
+    (x) => x.user.userName === data.userInfo.userName
+  )[0].id;
+  socketClient.emit("connection", "connect");
+  socketClient.emit("room_in", {
+    userId: data.userInfo.id,
+    roomId: data.chat.roomId,
+  });
+  socketClient.on("message", (req) => {
+    console.log(req);
+    df([
+      ...dummy,
+      {
+        userName: req.data.userName || "noname",
+        message: req.data.message,
+        time: "time",
+      },
+    ]);
+  });
+
   useEffect(() => {
     let cbox = document.getElementById("testest");
     cbox?.scrollTo(10000, 10000);
-  });
+    axios
+      .get(
+        process.env.REACT_APP_SERVER_URL + `/message/${data.chat.roomId}` || ""
+      )
+      .then((x) => {
+        df([...x.data]);
+        console.log(x);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <Frame>
-      {set ? <Setting f={setf}></Setting> : null}
+      {add ? (
+        <AddFriendFrame>
+          <AddFriend2
+            h={78}
+            ddata={data.friends}
+            data={data}
+            dataf={dataf}
+            nrf={addf}
+          ></AddFriend2>
+        </AddFriendFrame>
+      ) : (
+        <></>
+      )}
+      {set ? (
+        <Setting
+          data={data}
+          room={data.room[data.chat.roomIndex]}
+          dataf={dataf}
+          f={setf}
+          addf={addf}
+          outf={function () {
+            axios
+              .delete(
+                process.env.REACT_APP_SERVER_URL + `/member/${memberId}` || ""
+              )
+              .then(() => {
+                setf(false);
+                dataf({ isChatting: false });
+              })
+              .catch();
+          }}
+        ></Setting>
+      ) : null}
+
       <Button>
         <button
           onClick={() => {
             dataf({ isChatting: false });
+            socketClient.emit("disconnect", "out");
           }}
         >
           {"<-"}
@@ -124,7 +210,7 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
       <Content id="testest">
         {dummy.map((x, i) => (
           <CardBox key={i}>
-            {x.userName !== "user1" ? (
+            {x.userName !== data.userInfo.userName ? (
               <Message {...x}></Message>
             ) : (
               <Message_Reverse {...x}></Message_Reverse>
@@ -142,7 +228,24 @@ function Chat({ data, dataf }: { data: Data; dataf: Function }) {
         <Ibutton
           onClick={() => {
             if (msg.length > 0) {
-              df([...dummy, { userName: "user1", message: msg, time: "time" }]);
+              socketClient.emit("message", {
+                roomId: data.chat.roomId,
+                data: {
+                  id: data.userInfo.id,
+                  userName: data.userInfo.userName,
+                  message: msg,
+                  time: "time",
+                },
+              });
+
+              df([
+                ...dummy,
+                {
+                  userName: data.userInfo.userName || "noname",
+                  message: msg,
+                  time: "time",
+                },
+              ]);
               msgf("");
             }
           }}

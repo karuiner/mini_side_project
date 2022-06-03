@@ -104,7 +104,11 @@ function Addbox({ data, dataf }: { data: Data; dataf: Function }) {
         </Line>
       </InnerFrame>
       <ESCBox>
-        <ESC></ESC>
+        <ESC
+          onClick={() => {
+            dataf({ boxOn: false });
+          }}
+        ></ESC>
       </ESCBox>
     </Frame>
   );

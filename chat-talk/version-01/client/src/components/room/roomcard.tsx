@@ -16,6 +16,7 @@ const ImageBox = styled.div`
 `;
 const Tbox = styled.div`
   display: flex;
+  text-overflow: ellipsis;
 `;
 const Time = styled.div`
   display: flex;
@@ -42,7 +43,22 @@ const TextLine = styled.div`
   align-items: center;
 `;
 
-function Fcard({ f }: { f: Function }) {
+const MC = styled.span`
+  color: grey;
+  padding-left: 10px;
+`;
+
+function Fcard({
+  f,
+  name,
+  message,
+  c,
+}: {
+  name: string;
+  message: string;
+  f: Function;
+  c: number;
+}) {
   return (
     <Frame>
       <ImageBox>
@@ -50,11 +66,11 @@ function Fcard({ f }: { f: Function }) {
       </ImageBox>
       <TextBox>
         <NameLine>
-          <Tbox>{"name"}</Tbox>
+          <Tbox>{name}</Tbox>
+          {c > 2 ? <MC>{c}</MC> : null}
         </NameLine>
         <TextLine>
-          <Tbox>{"text"}</Tbox>
-          <Time>{"time"}</Time>
+          <Tbox>{message}</Tbox>
         </TextLine>
       </TextBox>
     </Frame>

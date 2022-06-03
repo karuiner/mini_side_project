@@ -1,6 +1,7 @@
 import axios, { Axios } from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import AddFriend from "../etc/addfriend";
 import { Data } from "../interface/datainterface";
 import NRFCard from "./nrfcard";
 
@@ -77,20 +78,23 @@ function NewRoom({
         <button
           onClick={() => {
             let userIds = dummy.map((x) => x.id).filter((x, i) => check[i]);
-            axios
-              .post(process.env.REACT_APP_SERVER_URL + `/room` || "", {
-                roomName: rname,
-                userIds: [...userIds, data.userInfo.id],
-              })
-              .then((x) => {
-                console.log(x);
-              })
-              .catch((err) => {
-                console.log(err);
-              })
-              .finally(() => {
-                nrf(false);
-              });
+            console.log(userIds);
+            if (userIds.length > 0) {
+              axios
+                .post(process.env.REACT_APP_SERVER_URL + `/room` || "", {
+                  roomName: rname,
+                  userIds: [...userIds, data.userInfo.id],
+                })
+                .then((x) => {
+                  console.log(x);
+                })
+                .catch((err) => {
+                  console.log(err);
+                })
+                .finally(() => {
+                  nrf(false);
+                });
+            }
           }}
         >
           {"완료"}
@@ -105,47 +109,7 @@ function NewRoom({
           }}
         ></input>
       </NameLine>
-      <FnameLine>
-        <input
-          placeholder="추가하실 친구의 이름을 입력해주세요"
-          onChange={(e) => {
-            let name = e.target.value;
-            if (name.length > 0) {
-              axios
-                .get(
-                  process.env.REACT_APP_SERVER_URL + `/user/name/${name}` || ""
-                )
-                .then((x) => {
-                  if (x.data.length > 0 || x.data.id !== undefined) {
-                    dummyf([x.data]);
-                    checkf(Array(x.data.length).fill(false));
-                  } else {
-                    dummyf([]);
-                    checkf([]);
-                  }
-                })
-                .catch(() => {});
-            } else {
-              dummyf(friend);
-            }
-          }}
-        ></input>
-      </FnameLine>
-      <FlistLine>
-        {dummy.map((x, i) => {
-          return (
-            <ListCard key={i}>
-              <NRFCard
-                data={x}
-                check={(ck: boolean) => {
-                  check[i] = ck;
-                  checkf(check);
-                }}
-              ></NRFCard>
-            </ListCard>
-          );
-        })}
-      </FlistLine>
+      <AddFriend data={data} dataf={dataf} ucheckf={checkf}></AddFriend>
     </Frame>
   );
 }

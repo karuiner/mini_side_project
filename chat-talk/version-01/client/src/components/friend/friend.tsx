@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import AddFriend2 from "../etc/addfriend2";
 import { Data } from "../interface/datainterface";
 import Fcard from "./fcard";
 
@@ -67,6 +68,7 @@ const CardBox = styled.div`
 
 function Friend({ data, dataf }: { data: Data; dataf: Function }) {
   let [update, updatef] = useState(false);
+  let [add, addf] = useState(false);
   let id = data.userInfo.id;
   useEffect(() => {
     axios
@@ -78,43 +80,56 @@ function Friend({ data, dataf }: { data: Data; dataf: Function }) {
 
   return (
     <Frame>
-      <Line>
-        <Count>{`친구 ${data.friends.length}명`}</Count>
-        <Button
-          onClick={() => {
-            dataf({ boxOn: true });
-          }}
-        >
-          {"친구 추가"}
-        </Button>
-      </Line>
-      <Content>
-        <ContentInner>
-          {data.friends.map((x, i) => {
-            return (
-              <CardBox key={i}>
-                <Fcard
-                  id={x.id}
-                  user={x.puser}
-                  f={() => {
-                    axios
-                      .delete(
-                        process.env.REACT_APP_SERVER_URL + `/friend/${x.id}` ||
-                          ""
-                      )
-                      .then(() => {
-                        updatef(!update);
-                      })
-                      .catch(() => {
-                        console.log("fail");
-                      });
-                  }}
-                ></Fcard>
-              </CardBox>
-            );
-          })}
-        </ContentInner>
-      </Content>
+      {add ? (
+        <AddFriend2
+          h={62}
+          ddata={[]}
+          data={data}
+          dataf={dataf}
+          nrf={addf}
+        ></AddFriend2>
+      ) : (
+        <>
+          <Line>
+            <Count>{`친구 ${data.friends.length}명`}</Count>
+            <Button
+              onClick={() => {
+                // dataf({ boxOn: true });
+                addf(true);
+              }}
+            >
+              {"친구 추가"}
+            </Button>
+          </Line>
+          <Content>
+            <ContentInner>
+              {data.friends.map((x, i) => {
+                return (
+                  <CardBox key={i}>
+                    <Fcard
+                      id={x.id}
+                      user={x.puser}
+                      f={() => {
+                        axios
+                          .delete(
+                            process.env.REACT_APP_SERVER_URL +
+                              `/friend/${x.id}` || ""
+                          )
+                          .then(() => {
+                            updatef(!update);
+                          })
+                          .catch(() => {
+                            console.log("fail");
+                          });
+                      }}
+                    ></Fcard>
+                  </CardBox>
+                );
+              })}
+            </ContentInner>
+          </Content>
+        </>
+      )}
     </Frame>
   );
 }

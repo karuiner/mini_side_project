@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { Data } from "../interface/datainterface";
-
 const Frame = styled.div`
   box-sizing: border-box;
   height: 100%;

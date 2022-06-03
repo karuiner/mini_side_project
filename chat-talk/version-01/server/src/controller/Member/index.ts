@@ -66,7 +66,20 @@ router.post("/many", (req, res) => {
 router.delete("/:id", (req, res) => {
   let id = Number(req.params.id);
   member
-    .delete(id)
+    .findOneOrFail({
+      relations: { room: { member: true } },
+      where: { id: id },
+    })
+    .then((imember) => {
+      let k = imember.room.member.length;
+      if (k > 1) {
+        return member.delete(id);
+      } else {
+        return member.delete(id).then(() => {
+          return room.delete(imember.room.id);
+        });
+      }
+    })
     .then(() => {
       res.status(200).send("멤버 제거 완료");
     })

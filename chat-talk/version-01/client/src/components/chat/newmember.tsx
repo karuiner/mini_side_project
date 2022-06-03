@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import AddFriend from "../etc/addfriend";
 import { Data, member, room } from "../interface/datainterface";
 import MemberCard from "./membercard";
 
@@ -9,11 +10,12 @@ const Frame = styled.div`
   height: inherit;
   width: inherit;
   display: flex;
+  z-index: 3;
   position: absolute;
 `;
 const InnerFrame = styled.div`
-  height: inherit;
-  width: inherit;
+  height: 100%;
+  width: 100%;
   display: flex;
   border-radius: 20px;
   padding: 20px;
@@ -83,88 +85,65 @@ const Button = styled.div`
   padding-right: 20px;
 `;
 
-interface Dummy {
-  userName: string;
-  friend: boolean;
-}
+const ButtonLine = styled.div`
+  display: flex;
+  height: 4vh;
+  width: 100%;
+  justify-content: space-between;
+  padding-right: 20px;
+  align-items: center;
+`;
 
-function Setting({
+function NewMember({
   data,
-  room,
   dataf,
-  f,
-  outf,
   addf,
 }: {
   data: Data;
-  room: room;
-  dataf: Function;
-  f: Function;
   addf: Function;
-  outf: Function;
+  dataf: Function;
 }) {
   let [member, memberf] = useState<member[]>([]);
   let friends = data.friends.map((x) => x.puser.userName);
-  useEffect(() => {
-    if (member.length === 0) {
-      let xx = room.member.filter((x) => {
-        return x.user.userName !== data.userInfo.userName;
-      });
-
-      memberf(xx);
-    }
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Frame>
       <InnerFrame>
-        <Return>
+        <ButtonLine>
           <button
             onClick={() => {
-              f(false);
+              addf(false);
             }}
           >
             {"<-"}
           </button>
-        </Return>
-        <RoomName>
-          {"roomname"}
-          <button>{"수정"}</button>
-        </RoomName>
-        <AddMember>
           <button
             onClick={() => {
-              addf(true);
+              //   let userIds = dummy.map((x) => x.id).filter((x, i) => check[i]);
+              //   axios
+              //     .post(process.env.REACT_APP_SERVER_URL + `/room` || "", {
+              //       roomName: rname,
+              //       userIds: [...userIds, data.userInfo.id],
+              //     })
+              //     .then((x) => {
+              //       console.log(x);
+              //     })
+              //     .catch((err) => {
+              //       console.log(err);
+              //     })
+              //     .finally(() => {
+              //       addf(false);
+              //     });
+              addf(false);
             }}
           >
-            {"친구 추가"}
+            {"완료"}
           </button>
-        </AddMember>
-        <MemberLabel>{"대화 상대"}</MemberLabel>
-        <RoomMember>
-          {member.map((x, i) => {
-            let xdata = {
-              userName: x.user.userName,
-              friend: friends.includes(x.user.userName),
-            };
-            return (
-              <MemberCardBox key={i}>
-                <MemberCard data={xdata} dataf={memberf}></MemberCard>
-              </MemberCardBox>
-            );
-          })}
-        </RoomMember>
-        <Button>
-          <button
-            onClick={() => {
-              outf();
-            }}
-          >
-            {"나가기"}
-          </button>
-        </Button>
+        </ButtonLine>
+        <AddFriend data={data} dataf={dataf} ucheckf={() => {}}></AddFriend>
       </InnerFrame>
     </Frame>
   );
 }
-export default Setting;
+export default NewMember;

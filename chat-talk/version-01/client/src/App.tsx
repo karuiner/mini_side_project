@@ -31,36 +31,33 @@ const Box = styled.div`
   background-color: white;
   border: 1px solid black;
 `;
-let test = process.env;
+
+const data_init = {
+  isLogin: false,
+  isResister: false,
+  isChatting: false,
+  isModify: false,
+  boxOn: false,
+  content: "friend",
+  userInfo: {},
+  friends: [],
+  room: [],
+  chat: { roomId: -1, roomIndex: -1 },
+};
+
 function App() {
   // console.log(window.innerHeight, window.innerWidth);
   // console.log(process.env.REACT_APP_SERVER_URL);
   let [isLogin, isloginf] = useState(false);
   let [data, dataf] = useState<Data>({
-    isLogin: false,
-    isResister: false,
-    isChatting: false,
-    isModify: false,
-    boxOn: false,
-    content: "friend",
-    userInfo: {},
-    friends: [],
-    room: [],
+    ...data_init,
   });
   function IDF(input: {}, init = false) {
     if (!init) {
       dataf({ ...data, ...input });
     } else {
       dataf({
-        isLogin: false,
-        isResister: false,
-        isChatting: false,
-        isModify: false,
-        boxOn: false,
-        content: "friend",
-        userInfo: {},
-        friends: [],
-        room: [],
+        ...data_init,
       });
     }
   }

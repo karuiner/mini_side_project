@@ -3,7 +3,6 @@ import { Data } from "../interface/datainterface";
 import Labelinput from "../etc/labelInput";
 import axios from "axios";
 import { useState } from "react";
-import { stringify } from "querystring";
 
 const Frame = styled.div`
   height: 100%;

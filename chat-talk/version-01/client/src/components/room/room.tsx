@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Data } from "../interface/datainterface";
+import { Data, room } from "../interface/datainterface";
 import NewRoom from "./newroom";
 import RoomCard from "./roomcard";
-
+import io from "socket.io-client";
+import AddFriend2 from "../etc/addfriend2";
+const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 const Frame = styled.div`
   height: 100%;
   width: 100%;
@@ -65,23 +67,25 @@ const CardBox = styled.div`
 
 function Room({ data, dataf }: { data: Data; dataf: Function }) {
   let [nr, nrf] = useState(false);
-
   useEffect(() => {
     axios
       .get(process.env.REACT_APP_SERVER_URL + `/room/${data.userInfo.id}` || "")
       .then((x) => {
-        console.log(x.data);
         dataf({ room: [...x.data] });
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }, [nr]);
 
   return (
     <Frame>
       {nr ? (
-        <NewRoom data={data} dataf={dataf} nrf={nrf}></NewRoom>
+        <AddFriend2
+          h={68}
+          ddata={data.friends}
+          data={data}
+          dataf={dataf}
+          nrf={nrf}
+        ></AddFriend2>
       ) : (
         <>
           <Line>
@@ -96,14 +100,27 @@ function Room({ data, dataf }: { data: Data; dataf: Function }) {
           <Content>
             <ContentInner>
               {data.room.map((x, i) => {
+                let name =
+                  x.roomName.length > 0
+                    ? x.roomName
+                    : x.member
+                        .map((x) => x.user.userName)
+                        .filter((x) => x !== data.userInfo.userName)
+                        .join(", ");
                 return (
                   <CardBox
                     key={i}
                     onClick={() => {
-                      dataf({ isChatting: true });
+                      dataf({
+                        isChatting: true,
+                        chat: { roomId: x.id, roomIndex: i },
+                      });
                     }}
                   >
                     <RoomCard
+                      name={name}
+                      message={x.lastMessage}
+                      c={x.member.length}
                       f={() => {
                         dataf({
                           friends: [

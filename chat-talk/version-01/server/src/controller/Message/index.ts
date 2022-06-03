@@ -12,15 +12,26 @@ router.get("/:id", (req, res) => {
     .findOne({ where: { id: id } })
     .then((rdata) => {
       return message.find({
+        relations: { user: true },
+        select: { user: { userName: true } },
         where: { room: rdata },
         order: {
-          id: "DESC",
+          id: "ASC",
         },
         take: 10,
       });
     })
     .then((data) => {
-      res.status(200).send(data);
+      res.status(200).send(
+        data.map((x) => {
+          return {
+            id: x.id,
+            message: x.text,
+            userName: x.user.userName,
+            time: x.createdAt,
+          };
+        })
+      );
     })
     .catch((err) => {
       res.status(400).send("메세지 정보 요청 실패");
