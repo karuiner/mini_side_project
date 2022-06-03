@@ -56,7 +56,6 @@ AppDataSource.initialize()
             socket.data.roomName = target;
           });
       });
-      socket.on("disconnect", function (req) {});
 
       socket.on("message", function (req) {
         message

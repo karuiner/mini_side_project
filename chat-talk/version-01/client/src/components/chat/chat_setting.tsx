@@ -6,20 +6,17 @@ import MemberCard from "./membercard";
 
 const Frame = styled.div`
   box-sizing: border-box;
-  height: inherit;
-  width: inherit;
+  height: 100%;
+  width: 100%;
   display: flex;
-  position: absolute;
 `;
 const InnerFrame = styled.div`
-  height: inherit;
-  width: inherit;
+  height: 100%;
+  width: 100%;
   display: flex;
-  border-radius: 20px;
   padding: 20px;
-  background-color: yellow;
+  border-radius: 20px;
   flex-direction: column;
-  border: 2px solid black;
 `;
 const Return = styled.div`
   flex: 1 0 0;
