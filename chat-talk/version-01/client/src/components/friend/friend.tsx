@@ -105,7 +105,46 @@ function Friend({ data, dataf }: { data: Data; dataf: Function }) {
             <ContentInner>
               {data.friends.map((x, i) => {
                 return (
-                  <CardBox key={i}>
+                  <CardBox
+                    key={i}
+                    onClick={() => {
+                      axios
+                        .get(
+                          process.env.REACT_APP_SERVER_URL +
+                            `/room/private/${data.userInfo.id}/${x.puser.id}` ||
+                            ""
+                        )
+                        .then((x) => {
+                          console.log("exist", x);
+                          // dataf({
+                          //   isChatting: true,
+                          //   chat: { roomId: x.data.id },
+                          // });
+                        })
+                        .catch((err) => {
+                          axios
+                            .post(
+                              process.env.REACT_APP_SERVER_URL + `/room` || "",
+                              {
+                                roomName: "",
+                                userIds: [x.puser.id, data.userInfo.id],
+                                type: "private",
+                              }
+                            )
+                            .then((x) => {
+                              let k = data.room.length;
+                              // dataf({
+                              //   isChatting: true,
+                              //   data:{room:[...data.room,{id: x.data.id }]},
+                              //   chat: { roomId: x.data.id, roomIndex:k },
+                              // });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        });
+                    }}
+                  >
                     <Fcard
                       id={x.id}
                       user={x.puser}

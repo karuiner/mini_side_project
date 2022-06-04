@@ -11,6 +11,9 @@ export class Room {
   roomName: string;
 
   @Column()
+  type: string;
+
+  @Column()
   lastMessage: string;
 
   @OneToMany((type) => Member, (member) => member.room, { cascade: ["remove"] })
