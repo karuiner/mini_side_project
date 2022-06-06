@@ -87,6 +87,7 @@ function AddFriend2({
               .post(process.env.REACT_APP_SERVER_URL + `/room` || "", {
                 roomName: rname,
                 userIds: [...userIds, data.userInfo.id],
+                type: "room",
               })
               .then((x) => {
                 console.log(x);

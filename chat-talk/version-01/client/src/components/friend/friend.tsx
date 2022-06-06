@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import AddFriend2 from "../etc/addfriend2";
-import { Data } from "../interface/datainterface";
+import { Data, room } from "../interface/datainterface";
 import Fcard from "./fcard";
 
 const Frame = styled.div`
@@ -105,7 +105,95 @@ function Friend({ data, dataf }: { data: Data; dataf: Function }) {
             <ContentInner>
               {data.friends.map((x, i) => {
                 return (
-                  <CardBox key={i}>
+                  <CardBox
+                    key={i}
+                    onClick={() => {
+                      axios
+                        .get(
+                          process.env.REACT_APP_SERVER_URL +
+                            `/room/private/${data.userInfo.id}/${x.puser.id}` ||
+                            ""
+                        )
+                        .then((x) => {
+                          axios
+                            .get(
+                              process.env.REACT_APP_SERVER_URL +
+                                `/room/${data.userInfo.id}` || ""
+                            )
+                            .then((xx) => {
+                              let index = -1;
+                              let roomd: room[] = xx.data;
+                              roomd.forEach((iroom, i) => {
+                                if (iroom.id === x.data.id) {
+                                  index = i;
+                                }
+                              });
+
+                              dataf({
+                                room: [...xx.data],
+                                isChatting: true,
+                                chat: { roomId: x.data.id, roomIndex: index },
+                              });
+                            })
+                            .catch((err) => {});
+                        })
+                        .catch((err) => {
+                          axios
+                            .post(
+                              process.env.REACT_APP_SERVER_URL + `/room` || "",
+                              {
+                                roomName: "",
+                                userIds: [x.puser.id, data.userInfo.id],
+                                type: "private",
+                              }
+                            )
+                            .then((xp) => {
+                              let k = data.room.length;
+                              // dataf({
+                              //   isChatting: true,
+                              //   data:{room:[...data.room,{id: x.data.id }]},
+                              //   chat: { roomId: x.data.id, roomIndex:k },
+                              // });
+
+                              axios
+                                .get(
+                                  process.env.REACT_APP_SERVER_URL +
+                                    `/room/private/${data.userInfo.id}/${x.puser.id}` ||
+                                    ""
+                                )
+                                .then((x) => {
+                                  axios
+                                    .get(
+                                      process.env.REACT_APP_SERVER_URL +
+                                        `/room/${data.userInfo.id}` || ""
+                                    )
+                                    .then((xx) => {
+                                      let index = -1;
+                                      let roomd: room[] = xx.data;
+                                      roomd.forEach((iroom, i) => {
+                                        if (iroom.id === x.data.id) {
+                                          index = i;
+                                        }
+                                      });
+
+                                      dataf({
+                                        room: [...xx.data],
+                                        isChatting: true,
+                                        chat: {
+                                          roomId: x.data.id,
+                                          roomIndex: index,
+                                        },
+                                      });
+                                    })
+                                    .catch((err) => {});
+                                });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        });
+                    }}
+                  >
                     <Fcard
                       id={x.id}
                       user={x.puser}
