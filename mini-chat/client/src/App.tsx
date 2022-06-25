@@ -137,12 +137,26 @@ const RoomFrame = styled.div`
   border: 2px solid green;
 `;
 
+interface message {
+  userName: string;
+  message: string;
+  time: Date;
+}
+
 interface Data {
-  roomName: string[];
+  userName: string;
+  roomName: string;
+  roomNames: string[];
+  messages: message[];
+  members: string[];
 }
 
 let dataInit: Data = {
-  roomName: [],
+  userName: "",
+  roomName: "로비",
+  roomNames: ["로비", "", "", "", "", "", "", "", "", ""],
+  messages: [],
+  members: [],
 };
 let roomName = Array(10).fill("");
 roomName[0] = "로비";
@@ -159,7 +173,7 @@ let dummy = [
 const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 function App() {
   socketClient.emit("connection", "connect");
-  let [data, dataf] = useState<Data>({ roomName: [] });
+  let [data, dataf] = useState<Data>(dataInit);
 
   return (
     <Frame>
