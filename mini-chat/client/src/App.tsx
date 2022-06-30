@@ -59,7 +59,7 @@ const TextBox = styled.div`
 `;
 const TextA = styled.div`
   height: 100%;
-  width: 100px;
+  width: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,7 +72,13 @@ const TextB = styled.div`
   // justify-content: center;
   align-items: center;
 `;
-
+const TextC = styled.div`
+  height: 100%;
+  flex: 1 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const MemberFrame = styled.div`
   height: 100%;
   width: 200px;
@@ -107,10 +113,10 @@ const InputFrame = styled.div`
   height: 60px;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   border: 2px solid green;
 `;
-const NameFrame = styled.div`
+const NameFrame = styled.label`
   height: 100%;
   width: 150px;
   display: flex;
@@ -138,9 +144,10 @@ const RoomFrame = styled.div`
 `;
 
 interface message {
-  userName: string;
+  type: string;
+  userName?: string;
   message: string;
-  time: Date;
+  time?: string;
 }
 
 interface Data {
@@ -174,6 +181,20 @@ const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 function App() {
   socketClient.emit("connection", "connect");
   let [data, dataf] = useState<Data>(dataInit);
+  let [message, messagef] = useState("");
+  socketClient.on("Login", (req) => {
+    dataf({ ...data, userName: req.userName, members: req.users });
+  });
+  socketClient.on("Ologin", (req) => {
+    dataf({ ...data, members: req.users });
+  });
+
+  socketClient.on("message", (req) => {
+    dataf({
+      ...data,
+      messages: [...data.messages, { type: req.type, ...req.message }],
+    });
+  });
 
   return (
     <Frame>
@@ -188,25 +209,47 @@ function App() {
               ))}
             </LabelFrame>
             <TextFrame>
-              {dummy.map((x, i) => (
+              {data.messages.map((x, i) => (
                 <TextBox key={i}>
-                  <TextA>{x.name + " : "}</TextA>
+                  {x.type === "message" ? (
+                    <>
+                      <TextA>{x.userName + " : "}</TextA>
 
-                  <TextB>{x.text}</TextB>
+                      <TextB>{x.message}</TextB>
+                      <TextA>{x.time}</TextA>
+                    </>
+                  ) : null}
+                  {x.type === "Day" ? <TextC>{x.message}</TextC> : null}
                 </TextBox>
               ))}
             </TextFrame>
           </RoomFrame>
           <InputFrame>
-            <NameFrame>{"aaa"}</NameFrame>
-            <InputBox></InputBox>
-            <InputButton>{"전송"}</InputButton>
+            <NameFrame htmlFor="input-0001">{data.userName}</NameFrame>
+            <InputBox
+              type={"text"}
+              id={"input-0001"}
+              value={message}
+              onChange={(e) => {
+                messagef(e.target.value);
+              }}
+            ></InputBox>
+            <InputButton
+              onClick={() => {
+                socketClient.emit("message", {
+                  message: message,
+                });
+                messagef("");
+              }}
+            >
+              {"전송"}
+            </InputButton>
           </InputFrame>
         </MainFrame>
         <MemberFrame>
           <MemberLabel>{"참여 인원"}</MemberLabel>
           <MemberList>
-            {members.map((x, i) => (
+            {data.members.map((x, i) => (
               <Member key={i}>{x}</Member>
             ))}
           </MemberList>

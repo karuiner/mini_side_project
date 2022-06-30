@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
     .to(rooms["로비"])
     .emit("Ologin", { userName: userName, users: Object.keys(users) });
   unumber++;
-  socket.on("disconnection", () => {
+  socket.on("disconnect", () => {
     delete users[socket.data.userName];
     console.log(socket.data.userName);
   });
@@ -98,9 +98,10 @@ io.on("connection", (socket) => {
   // 메세지 전송
   // time type Date
   socket.on("message", (req) => {
-    let time = req.time.toISOString().split("T");
+    let htime = new Date();
+    let time = htime.toISOString().split("T");
     let day = new Intl.DateTimeFormat("ko-KR", { weekday: "long" }).format(
-      req.time
+      htime
     );
     let times = time[0].split("-");
     let hday = `${times[0]}년 ${times[1]}월 ${times[2]}일 ${day}`;
@@ -108,8 +109,8 @@ io.on("connection", (socket) => {
       cday = hday;
       socket
         .to(rooms[socket.data.roomName])
-        .emit("message", { type: "Day", message: cday });
-      socket.emit("message", { type: "Day", message: cday });
+        .emit("message", { type: "Day", message: { message: cday } });
+      socket.emit("message", { type: "Day", message: { message: cday } });
     }
     socket.to(rooms[socket.data.roomName]).emit("message", {
       type: "message",
