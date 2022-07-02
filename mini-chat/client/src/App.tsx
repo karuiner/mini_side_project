@@ -153,6 +153,7 @@ interface message {
 interface Data {
   userName: string;
   roomName: string;
+  roomCount: number;
   roomNames: string[];
   messages: message[];
   members: string[];
@@ -161,9 +162,10 @@ interface Data {
 let dataInit: Data = {
   userName: "",
   roomName: "로비",
-  roomNames: ["로비", "", "", "", "", "", "", "", "", ""],
+  roomNames: ["로비"],
   messages: [],
   members: [],
+  roomCount: 1,
 };
 let roomName = Array(10).fill("");
 roomName[0] = "로비";
@@ -176,6 +178,7 @@ let dummy = [
   { name: "aaa", text: "text2" },
   { name: "ccc", text: "text2" },
 ];
+let dbox = Array(10).fill("");
 
 const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 function App() {
@@ -202,11 +205,33 @@ function App() {
         <MainFrame>
           <RoomFrame>
             <LabelFrame>
-              {roomName.map((x, i) => (
-                <Label key={i} select={true}>
-                  {x}
-                </Label>
-              ))}
+              {dbox.map((x, i) => {
+                let name = data.roomNames[i] || x;
+                console.log(name);
+                if (i === data.roomCount) {
+                  return (
+                    <Label
+                      key={i}
+                      select={false}
+                      onClick={() => {
+                        dataf({
+                          ...data,
+                          roomNames: [...data.roomNames, `newRoom-${i}`],
+                          roomCount: data.roomCount + 1,
+                        });
+                      }}
+                    >
+                      {"+"}
+                    </Label>
+                  );
+                } else {
+                  return (
+                    <Label key={i} select={data.roomName === name}>
+                      {name}
+                    </Label>
+                  );
+                }
+              })}
             </LabelFrame>
             <TextFrame>
               {data.messages.map((x, i) => (
@@ -233,13 +258,23 @@ function App() {
               onChange={(e) => {
                 messagef(e.target.value);
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && message.length > 0) {
+                  socketClient.emit("message", {
+                    message: message,
+                  });
+                  messagef("");
+                }
+              }}
             ></InputBox>
             <InputButton
               onClick={() => {
-                socketClient.emit("message", {
-                  message: message,
-                });
-                messagef("");
+                if (message.length > 0) {
+                  socketClient.emit("message", {
+                    message: message,
+                  });
+                  messagef("");
+                }
               }}
             >
               {"전송"}
