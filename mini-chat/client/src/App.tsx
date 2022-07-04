@@ -150,21 +150,24 @@ interface message {
   time?: string;
 }
 
+interface room {
+  messages: message[];
+  members: string[];
+}
+
 interface Data {
   userName: string;
   roomName: string;
   roomCount: number;
   roomNames: string[];
-  messages: message[];
-  members: string[];
+  room: { [key: string]: room };
 }
 
 let dataInit: Data = {
   userName: "",
   roomName: "로비",
   roomNames: ["로비"],
-  messages: [],
-  members: [],
+  room: { 로비: { messages: [], members: [] } },
   roomCount: 1,
 };
 let roomName = Array(10).fill("");
@@ -185,19 +188,20 @@ function App() {
   socketClient.emit("connection", "connect");
   let [data, dataf] = useState<Data>(dataInit);
   let [message, messagef] = useState("");
-  socketClient.on("Login", (req) => {
-    dataf({ ...data, userName: req.userName, members: req.users });
-  });
-  socketClient.on("Ologin", (req) => {
-    dataf({ ...data, members: req.users });
-  });
+  // socketClient.on("Login", (req) => {
+  //   dataf({ ...data, userName: req.userName, room:{[data.roomName]:{members:[] }} });
+  // });
+  // socketClient.on("Ologin", (req) => {
+  //   dataf({ ...data, members: req.users });
+  // });
 
-  socketClient.on("message", (req) => {
-    dataf({
-      ...data,
-      messages: [...data.messages, { type: req.type, ...req.message }],
-    });
-  });
+  // socketClient.on("message", (req) => {
+  //   dataf({
+  //     ...data,
+
+  //     messages: [...data.room.messages, { type: req.type, ...req.message }],
+  //   });
+  // });
 
   return (
     <Frame>
@@ -234,7 +238,7 @@ function App() {
               })}
             </LabelFrame>
             <TextFrame>
-              {data.messages.map((x, i) => (
+              {data.room[data.roomName].messages.map((x, i) => (
                 <TextBox key={i}>
                   {x.type === "message" ? (
                     <>
@@ -284,7 +288,7 @@ function App() {
         <MemberFrame>
           <MemberLabel>{"참여 인원"}</MemberLabel>
           <MemberList>
-            {data.members.map((x, i) => (
+            {data.room[data.roomName].members.map((x, i) => (
               <Member key={i}>{x}</Member>
             ))}
           </MemberList>
