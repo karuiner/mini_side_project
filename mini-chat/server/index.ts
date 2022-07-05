@@ -26,11 +26,11 @@ io.on("connection", (socket) => {
   socket.data.userName = userName;
   socket.data.roomName = "로비";
   users[userName] = true;
-  socket.emit("Login", { userName: userName, users: Object.keys(users) });
+  socket.emit("Login", { userName: userName, user: userName });
   socket.join(rooms["로비"]);
   socket
     .to(rooms["로비"])
-    .emit("Ologin", { userName: userName, users: Object.keys(users) });
+    .emit("Ologin", { userName: userName, user: userName });
   unumber++;
   socket.on("disconnect", () => {
     delete users[socket.data.userName];

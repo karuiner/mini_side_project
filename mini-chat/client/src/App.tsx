@@ -46,6 +46,20 @@ const Label = styled.div<{ select: boolean }>`
 const TextFrame = styled.div`
   flex: 1 0 0;
   display: flex;
+
+  flex-direction: column;
+  border: 2px solid red;
+  height: 100%;
+`;
+const TextButtonFrame = styled.div`
+  width: 100%;
+  height: 20px;
+  justify-content: center;
+  align-items: center;
+`;
+const TextInnerFrame = styled.div`
+  flex: 1 0 0;
+  display: flex;
   overflow-y: scroll;
   flex-direction: column;
   border: 2px solid red;
@@ -123,7 +137,13 @@ const NameFrame = styled.label`
   justify-content: center;
   align-items: center;
 `;
-
+const NameButtonFrame = styled.label`
+  height: 100%;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const InputBox = styled.input`
   height: 100%;
   flex: 1 0 0;
@@ -188,20 +208,29 @@ function App() {
   socketClient.emit("connection", "connect");
   let [data, dataf] = useState<Data>(dataInit);
   let [message, messagef] = useState("");
-  // socketClient.on("Login", (req) => {
-  //   dataf({ ...data, userName: req.userName, room:{[data.roomName]:{members:[] }} });
-  // });
-  // socketClient.on("Ologin", (req) => {
-  //   dataf({ ...data, members: req.users });
-  // });
+  socketClient.on("Login", (req) => {
+    let ndata = { ...data };
+    ndata.userName = req.userName;
+    ndata.room[ndata.roomName].members.push(req.userName);
 
-  // socketClient.on("message", (req) => {
-  //   dataf({
-  //     ...data,
+    dataf({ ...ndata });
+  });
+  socketClient.on("Ologin", (req) => {
+    let ndata = { ...data };
+    ndata.room[ndata.roomName].members.push(req.user);
+    dataf({ ...ndata });
+  });
 
-  //     messages: [...data.room.messages, { type: req.type, ...req.message }],
-  //   });
-  // });
+  socketClient.on("message", (req) => {
+    let ndata = { ...data };
+    ndata.room[ndata.roomName].messages.push({
+      type: req.type,
+      ...req.message,
+    });
+    dataf({
+      ...ndata,
+    });
+  });
 
   return (
     <Frame>
@@ -218,10 +247,15 @@ function App() {
                       key={i}
                       select={false}
                       onClick={() => {
+                        let ndata = { ...data };
+                        ndata.roomNames.push(`newRoom-${data.roomCount}`);
+                        ndata.roomCount++;
+                        ndata.room[`newRoom-${data.roomCount}`] = {
+                          messages: [],
+                          members: [data.userName],
+                        };
                         dataf({
-                          ...data,
-                          roomNames: [...data.roomNames, `newRoom-${i}`],
-                          roomCount: data.roomCount + 1,
+                          ...ndata,
                         });
                       }}
                     >
@@ -230,7 +264,15 @@ function App() {
                   );
                 } else {
                   return (
-                    <Label key={i} select={data.roomName === name}>
+                    <Label
+                      key={i}
+                      select={data.roomName === name}
+                      onClick={() => {
+                        if (name !== data.roomName) {
+                          dataf({ ...data, roomName: name });
+                        }
+                      }}
+                    >
                       {name}
                     </Label>
                   );
@@ -238,23 +280,34 @@ function App() {
               })}
             </LabelFrame>
             <TextFrame>
-              {data.room[data.roomName].messages.map((x, i) => (
-                <TextBox key={i}>
-                  {x.type === "message" ? (
-                    <>
-                      <TextA>{x.userName + " : "}</TextA>
+              {data.roomName !== "로비" ? (
+                <TextButtonFrame>
+                  <button>{"대화방 이름 변경"}</button>
+                  <button>{`나가기`}</button>
+                </TextButtonFrame>
+              ) : null}
+              <TextInnerFrame>
+                {data.room[data.roomName].messages.map((x, i) => (
+                  <TextBox key={i}>
+                    {x.type === "message" ? (
+                      <>
+                        <TextA>{x.userName + " : "}</TextA>
 
-                      <TextB>{x.message}</TextB>
-                      <TextA>{x.time}</TextA>
-                    </>
-                  ) : null}
-                  {x.type === "Day" ? <TextC>{x.message}</TextC> : null}
-                </TextBox>
-              ))}
+                        <TextB>{x.message}</TextB>
+                        <TextA>{x.time}</TextA>
+                      </>
+                    ) : null}
+                    {x.type === "Day" ? <TextC>{x.message}</TextC> : null}
+                  </TextBox>
+                ))}
+              </TextInnerFrame>
             </TextFrame>
           </RoomFrame>
           <InputFrame>
             <NameFrame htmlFor="input-0001">{data.userName}</NameFrame>
+            <NameButtonFrame>
+              <button>{"대화명 변경"}</button>
+            </NameButtonFrame>
             <InputBox
               type={"text"}
               id={"input-0001"}
