@@ -1,7 +1,7 @@
 import { useState } from "react";
 import io from "socket.io-client";
 import styled from "styled-components";
-
+import MessageBox from "./components/messagebox";
 const Frame = styled.div`
   height: 100vh;
   width: 100vw;
@@ -208,6 +208,7 @@ function App() {
   socketClient.emit("connection", "connect");
   let [data, dataf] = useState<Data>(dataInit);
   let [message, messagef] = useState("");
+  let [Mbox, Mboxf] = useState({ status: false, label: "" });
   socketClient.on("Login", (req) => {
     let ndata = { ...data };
     ndata.userName = req.userName;
@@ -235,6 +236,9 @@ function App() {
   return (
     <Frame>
       <InnerFrame>
+        {Mbox.status ? (
+          <MessageBox label={Mbox.label} dataf={() => {}}></MessageBox>
+        ) : null}
         <MainFrame>
           <RoomFrame>
             <LabelFrame>
@@ -282,7 +286,13 @@ function App() {
             <TextFrame>
               {data.roomName !== "로비" ? (
                 <TextButtonFrame>
-                  <button>{"대화방 이름 변경"}</button>
+                  <button
+                    onClick={() => {
+                      Mboxf({ status: true, label: "새 대화방 이름" });
+                    }}
+                  >
+                    {"대화방 이름 변경"}
+                  </button>
                   <button>{`나가기`}</button>
                 </TextButtonFrame>
               ) : null}
@@ -306,7 +316,13 @@ function App() {
           <InputFrame>
             <NameFrame htmlFor="input-0001">{data.userName}</NameFrame>
             <NameButtonFrame>
-              <button>{"대화명 변경"}</button>
+              <button
+                onClick={() => {
+                  Mboxf({ status: true, label: "새 대화명" });
+                }}
+              >
+                {"대화명 변경"}
+              </button>
             </NameButtonFrame>
             <InputBox
               type={"text"}
