@@ -44,6 +44,8 @@ const MainInput = styled.input`
   height: 30px;
   display: flex;
   justify-content: center;
+  text-align: right;
+  padding-right: 5px;
   align-items: center;
 `;
 const MainButton = styled.button`
@@ -59,7 +61,13 @@ function MessageBox({ label, dataf }: { label: string; dataf: Function }) {
   return (
     <Frame>
       <ButtonBox>
-        <Button>{"X"}</Button>
+        <Button
+          onClick={() => {
+            dataf("");
+          }}
+        >
+          {"X"}
+        </Button>
       </ButtonBox>
       <MainBox>
         <MainLabel>{label}</MainLabel>
@@ -71,10 +79,21 @@ function MessageBox({ label, dataf }: { label: string; dataf: Function }) {
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && text.length > 0) {
+              dataf(text);
+              textf("");
             }
           }}
         ></MainInput>
-        <MainButton>{"변경"}</MainButton>
+        <MainButton
+          onClick={() => {
+            if (text.length > 0) {
+              dataf(text);
+              textf("");
+            }
+          }}
+        >
+          {"변경"}
+        </MainButton>
       </MainBox>
     </Frame>
   );

@@ -147,6 +147,8 @@ const NameButtonFrame = styled.label`
 const InputBox = styled.input`
   height: 100%;
   flex: 1 0 0;
+  text-align: right;
+  padding-right: 10px;
 `;
 const InputButton = styled.button`
   height: 100%;
@@ -171,6 +173,7 @@ interface message {
 }
 
 interface room {
+  userName: string;
   messages: message[];
   members: string[];
 }
@@ -187,7 +190,7 @@ let dataInit: Data = {
   userName: "",
   roomName: "로비",
   roomNames: ["로비"],
-  room: { 로비: { messages: [], members: [] } },
+  room: { 로비: { userName: "", messages: [], members: [] } },
   roomCount: 1,
 };
 let roomName = Array(10).fill("");
@@ -211,7 +214,7 @@ function App() {
   let [Mbox, Mboxf] = useState({ status: false, label: "" });
   socketClient.on("Login", (req) => {
     let ndata = { ...data };
-    ndata.userName = req.userName;
+    ndata.room[ndata.roomName].userName = req.userName;
     ndata.room[ndata.roomName].members.push(req.userName);
 
     dataf({ ...ndata });
@@ -232,19 +235,43 @@ function App() {
       ...ndata,
     });
   });
-
   return (
     <Frame>
       <InnerFrame>
         {Mbox.status ? (
-          <MessageBox label={Mbox.label} dataf={() => {}}></MessageBox>
+          <MessageBox
+            label={Mbox.label}
+            dataf={(text: string) => {
+              if (text.length > 0 && Mbox.label === "새 대화명") {
+                let newdata = data.room[data.roomName];
+                newdata.userName = text;
+                dataf({
+                  ...data,
+                  room: { ...data.room, [data.roomName]: { ...newdata } },
+                });
+              } else if (text.length > 0) {
+                let newdata = data.room;
+                let roomnames = data.roomNames;
+                let idx = roomnames.indexOf(data.roomName);
+                roomnames[idx] = text;
+                newdata[text] = { ...newdata[data.roomName] };
+                delete newdata[data.roomName];
+                dataf({
+                  ...data,
+                  room: { ...newdata },
+                  roomNames: roomnames,
+                  roomName: text,
+                });
+              }
+              Mboxf({ ...Mbox, status: false });
+            }}
+          ></MessageBox>
         ) : null}
         <MainFrame>
           <RoomFrame>
             <LabelFrame>
               {dbox.map((x, i) => {
                 let name = data.roomNames[i] || x;
-                console.log(name);
                 if (i === data.roomCount) {
                   return (
                     <Label
@@ -255,8 +282,9 @@ function App() {
                         ndata.roomNames.push(`newRoom-${data.roomCount}`);
                         ndata.roomCount++;
                         ndata.room[`newRoom-${data.roomCount}`] = {
+                          userName: data.room[data.roomName].userName,
                           messages: [],
-                          members: [data.userName],
+                          members: [data.room[data.roomName].userName],
                         };
                         dataf({
                           ...ndata,
@@ -293,7 +321,22 @@ function App() {
                   >
                     {"대화방 이름 변경"}
                   </button>
-                  <button>{`나가기`}</button>
+                  <button
+                    onClick={() => {
+                      let newdata = data.room;
+                      let roomnames = data.roomNames.filter(
+                        (x) => x !== data.roomName
+                      );
+                      delete newdata[data.roomName];
+                      dataf({
+                        ...data,
+                        room: { ...newdata },
+                        roomNames: roomnames,
+                        roomName: "로비",
+                        roomCount: data.roomCount - 1,
+                      });
+                    }}
+                  >{`나가기`}</button>
                 </TextButtonFrame>
               ) : null}
               <TextInnerFrame>
@@ -314,7 +357,9 @@ function App() {
             </TextFrame>
           </RoomFrame>
           <InputFrame>
-            <NameFrame htmlFor="input-0001">{data.userName}</NameFrame>
+            <NameFrame htmlFor="input-0001">
+              {data.room[data.roomName].userName}
+            </NameFrame>
             <NameButtonFrame>
               <button
                 onClick={() => {
