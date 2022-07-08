@@ -215,13 +215,14 @@ function App() {
   socketClient.on("Login", (req) => {
     let ndata = { ...data };
     ndata.room[ndata.roomName].userName = req.userName;
-    ndata.room[ndata.roomName].members.push(req.userName);
+    ndata.room[ndata.roomName].members = req.users;
 
     dataf({ ...ndata });
   });
   socketClient.on("Ologin", (req) => {
     let ndata = { ...data };
-    ndata.room[ndata.roomName].members.push(req.user);
+
+    ndata.room[ndata.roomName].members = req.users;
     dataf({ ...ndata });
   });
 
@@ -243,6 +244,8 @@ function App() {
             label={Mbox.label}
             dataf={(text: string) => {
               if (text.length > 0 && Mbox.label === "새 대화명") {
+                // socketClient.emit("Name-Change", {userName:});
+
                 let newdata = data.room[data.roomName];
                 newdata.userName = text;
                 dataf({

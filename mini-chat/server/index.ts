@@ -26,11 +26,11 @@ io.on("connection", (socket) => {
   socket.data.userName = userName;
   socket.data.roomName = "로비";
   users[userName] = true;
-  socket.emit("Login", { userName: userName, user: userName });
+  socket.emit("Login", { userName: userName, users: Object.keys(users) });
   socket.join(rooms["로비"]);
   socket
     .to(rooms["로비"])
-    .emit("Ologin", { userName: userName, user: userName });
+    .emit("Ologin", { userName: userName, users: Object.keys(users) });
   unumber++;
   socket.on("disconnect", () => {
     delete users[socket.data.userName];
@@ -38,6 +38,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("Name-Change", (req) => {
+    delete users[socket.data.userName];
+    users[req.userName] = true;
+    socket.data.userName = req.userName;
     socket.to(req.roomName).emit("Orther-Name-Change", {
       oldName: socket.data.userName,
       newName: req.userName,
