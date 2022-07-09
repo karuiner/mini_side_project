@@ -101,6 +101,7 @@ io.on("connection", (socket) => {
   // 메세지 전송
   // time type Date
   socket.on("message", (req) => {
+    console.log(req);
     let htime = new Date();
     let time = htime.toISOString().split("T");
     let day = new Intl.DateTimeFormat("ko-KR", { weekday: "long" }).format(
@@ -118,7 +119,7 @@ io.on("connection", (socket) => {
     socket.to(rooms[socket.data.roomName]).emit("message", {
       type: "message",
       message: {
-        userName: socket.data.userName,
+        userName: req.userName,
         message: req.message,
         time: time[1],
       },
@@ -126,7 +127,7 @@ io.on("connection", (socket) => {
     socket.emit("message", {
       type: "message",
       message: {
-        userName: socket.data.userName,
+        userName: req.userName,
         message: req.message,
         time: time[1],
       },

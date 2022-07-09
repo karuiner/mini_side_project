@@ -228,6 +228,7 @@ function App() {
 
   socketClient.on("message", (req) => {
     let ndata = { ...data };
+    console.log(req);
     ndata.room[ndata.roomName].messages.push({
       type: req.type,
       ...req.message,
@@ -382,6 +383,7 @@ function App() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && message.length > 0) {
                   socketClient.emit("message", {
+                    userName: data.room[data.roomName].userName,
                     message: message,
                   });
                   messagef("");
@@ -392,6 +394,7 @@ function App() {
               onClick={() => {
                 if (message.length > 0) {
                   socketClient.emit("message", {
+                    userName: data.room[data.roomName].userName,
                     message: message,
                   });
                   messagef("");
