@@ -184,6 +184,7 @@ interface Data {
   roomCount: number;
   roomNames: string[];
   room: { [key: string]: room };
+  cday: string;
 }
 
 let dataInit: Data = {
@@ -192,6 +193,7 @@ let dataInit: Data = {
   roomNames: ["로비"],
   room: { 로비: { userName: "", messages: [], members: [] } },
   roomCount: 1,
+  cday: "",
 };
 let roomName = Array(10).fill("");
 roomName[0] = "로비";
@@ -220,21 +222,42 @@ function App() {
     dataf({ ...ndata });
   });
   socketClient.on("Ologin", (req) => {
-    let ndata = { ...data };
+    let nmsg = [];
+    // if (data.cday !== req.cday) {
+    //   nmsg.push({ type: "Day", message: req.cday });
+    // }
+    nmsg.push({ type: "In", message: `${req.userName}님이 입장 하였습니다.` });
 
-    ndata.room[ndata.roomName].members = req.users;
-    dataf({ ...ndata });
+    dataf({
+      ...data,
+      room: {
+        ...data.room,
+        로비: {
+          ...data.room["로비"],
+          members: req.users,
+          messages: [...data.room["로비"].messages, ...nmsg],
+        },
+      },
+    });
   });
 
   socketClient.on("message", (req) => {
-    let ndata = { ...data };
-    console.log(req);
-    ndata.room[ndata.roomName].messages.push({
-      type: req.type,
-      ...req.message,
-    });
+    let nmsg = [];
+    if (data.cday !== req.cday) {
+      nmsg.push({ type: "Day", message: req.cday });
+    }
+    nmsg.push({ type: req.type, ...req.message });
+
     dataf({
-      ...ndata,
+      ...data,
+      cday: req.cday,
+      room: {
+        ...data.room,
+        [data.roomName]: {
+          ...data.room[data.roomName],
+          messages: [...data.room[data.roomName].messages, ...nmsg],
+        },
+      },
     });
   });
   return (
@@ -355,6 +378,8 @@ function App() {
                       </>
                     ) : null}
                     {x.type === "Day" ? <TextC>{x.message}</TextC> : null}
+                    {x.type === "In" ? <TextC>{x.message}</TextC> : null}
+                    {x.type === "Out" ? <TextC>{x.message}</TextC> : null}
                   </TextBox>
                 ))}
               </TextInnerFrame>

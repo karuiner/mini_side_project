@@ -14,12 +14,11 @@ interface user {
 interface data {
   [key: string]: user;
 }
-
+// room 은 모든 유저들에게서 독립적으로 존재.
 let db: data = {},
   rooms: { [key: string]: string } = { 로비: "room00000000" },
   roomId = 1,
-  users: { [key: string]: boolean } = {},
-  cday = "";
+  users: { [key: string]: boolean } = {};
 
 io.on("connection", (socket) => {
   let userName = `Guest-${`${unumber}`.padStart(8, "0")}`;
@@ -52,13 +51,9 @@ io.on("connection", (socket) => {
     if (rooms[req.roomName] === undefined) {
       rooms[req.roomName] = `room${roomId}`.padStart(8, "0");
       roomId++;
-      // 새로 생성된 방. 어디에 방송하지?
-      // socket.to(rooms[req.roomName]).emit("new-room", {
-      //   roomName: req.roomName,
-      // });
-      socket.emit("new-room", `${req.roomName} 대화방이 생성 되었습니다.`);
+      socket.emit("new-room", { result: true, roomName: req.roomName });
     } else {
-      socket.emit("used-roomName", "사용 된 방이름");
+      socket.emit("new-room", { result: false, roomName: req.roomName });
     }
   });
 
@@ -109,28 +104,17 @@ io.on("connection", (socket) => {
     );
     let times = time[0].split("-");
     let hday = `${times[0]}년 ${times[1]}월 ${times[2]}일 ${day}`;
-    if (hday !== cday) {
-      cday = hday;
-      socket
-        .to(rooms[socket.data.roomName])
-        .emit("message", { type: "Day", message: { message: cday } });
-      socket.emit("message", { type: "Day", message: { message: cday } });
-    }
-    socket.to(rooms[socket.data.roomName]).emit("message", {
+    let smsg = {
       type: "message",
+      cday: hday,
       message: {
         userName: req.userName,
         message: req.message,
-        time: time[1],
+        time: time[1].split(".")[0],
       },
-    });
-    socket.emit("message", {
-      type: "message",
-      message: {
-        userName: req.userName,
-        message: req.message,
-        time: time[1],
-      },
-    });
+    };
+
+    socket.to(rooms[socket.data.roomName]).emit("message", smsg);
+    socket.emit("message", smsg);
   });
 });
