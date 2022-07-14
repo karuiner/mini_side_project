@@ -96,7 +96,6 @@ io.on("connection", (socket) => {
   // 메세지 전송
   // time type Date
   socket.on("message", (req) => {
-    console.log(req);
     let htime = new Date();
     let time = htime.toISOString().split("T");
     let day = new Intl.DateTimeFormat("ko-KR", { weekday: "long" }).format(

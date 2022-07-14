@@ -173,6 +173,7 @@ interface message {
 }
 
 interface room {
+  cday: string;
   userName: string;
   messages: message[];
   members: string[];
@@ -191,7 +192,7 @@ let dataInit: Data = {
   userName: "",
   roomName: "로비",
   roomNames: ["로비"],
-  room: { 로비: { userName: "", messages: [], members: [] } },
+  room: { 로비: { cday: "", userName: "", messages: [], members: [] } },
   roomCount: 1,
   cday: "",
 };
@@ -208,6 +209,14 @@ let dummy = [
 ];
 let dbox = Array(10).fill("");
 
+function cdayf() {
+  let htime = new Date();
+  let time = htime.toISOString().split("T");
+  let day = new Intl.DateTimeFormat("ko-KR", { weekday: "long" }).format(htime);
+  let times = time[0].split("-");
+  return `${times[0]}년 ${times[1]}월 ${times[2]}일 ${day}`;
+}
+
 const socketClient = io(process.env.REACT_APP_SERVER_URL || "");
 function App() {
   socketClient.emit("connection", "connect");
@@ -216,9 +225,11 @@ function App() {
   let [Mbox, Mboxf] = useState({ status: false, label: "" });
   socketClient.on("Login", (req) => {
     let ndata = { ...data };
+    let cday = cdayf();
     ndata.room[ndata.roomName].userName = req.userName;
     ndata.room[ndata.roomName].members = req.users;
-
+    ndata.room[ndata.roomName].cday = cday;
+    ndata.room[ndata.roomName].messages = [{ type: "Day", message: cday }];
     dataf({ ...ndata });
   });
   socketClient.on("Ologin", (req) => {
@@ -243,18 +254,18 @@ function App() {
 
   socketClient.on("message", (req) => {
     let nmsg = [];
-    if (data.cday !== req.cday) {
+    if (data.room[data.roomName].cday !== req.cday) {
       nmsg.push({ type: "Day", message: req.cday });
     }
     nmsg.push({ type: req.type, ...req.message });
 
     dataf({
       ...data,
-      cday: req.cday,
       room: {
         ...data.room,
         [data.roomName]: {
           ...data.room[data.roomName],
+          cday: req.cday,
           messages: [...data.room[data.roomName].messages, ...nmsg],
         },
       },
@@ -305,12 +316,15 @@ function App() {
                       key={i}
                       select={false}
                       onClick={() => {
-                        let ndata = { ...data };
+                        let ndata = { ...data },
+                          cday = cdayf();
+                        ndata.roomName = `newRoom-${data.roomCount}`;
                         ndata.roomNames.push(`newRoom-${data.roomCount}`);
                         ndata.roomCount++;
                         ndata.room[`newRoom-${data.roomCount}`] = {
+                          cday: cday,
                           userName: data.room[data.roomName].userName,
-                          messages: [],
+                          messages: [{ type: "Day", message: cday }],
                           members: [data.room[data.roomName].userName],
                         };
                         dataf({
